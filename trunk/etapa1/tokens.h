@@ -32,7 +32,7 @@
 #define LIT_INTEGER   281
 #define LIT_FLOATING  282
 #define LIT_FALSE     283
-#define LIT_TRUE	    284
+#define LIT_TRUE      284
 #define LIT_CHARACTER 285
 #define LIT_STRING    286
 
