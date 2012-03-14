@@ -26,7 +26,7 @@ digit				[0-9]
 "return"			{return KW_RETURN;}
 "output"			{return KW_OUTPUT;}
 
-[,;:()[\]{}+\-*/<>=!&$]		{return yytext[0];}
+[-,;:()[\]{}+\*/<>=!&$]		{return yytext[0];}
 
 "<="				{return OPERATOR_LE;}
 ">="				{return OPERATOR_GE;}
