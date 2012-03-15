@@ -25,7 +25,6 @@ HASH_ELEMENT* hash_insert(int token, char *text)
 	element->next = 0;
 	
 	address = hash_address(text);
-	printf("%d\n", address);
 	element->next = hashTable[address];
 	hashTable[address] = element;	
 	
