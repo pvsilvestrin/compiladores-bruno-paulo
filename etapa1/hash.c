@@ -18,9 +18,12 @@ HASH_ELEMENT* hash_insert(int token, char *text)
 	int address;
 	HASH_ELEMENT *element;
 
+	if(element = hash_find(text))
+		return element;
+
 	element = (HASH_ELEMENT*)malloc(sizeof(HASH_ELEMENT));
 	element->token = token;
-	element->text = (char*)malloc(strlen(text)*sizeof(char));
+	element->text = (char*)calloc(strlen(text)+1,sizeof(char));
 	strcpy(element->text, text);
 	element->next = 0;
 	
@@ -35,11 +38,12 @@ int hash_address(char *text)
 {
 	int i;
 	int address=1;
-	for(i = 0; text[i] != '\0'; ++i)
+	int textlen = strlen(text);
+	for(i = 0; i < textlen; ++i)
 	{
-		address = (address*text[i]) % SIZE;	
+		address = (address * text[i]) % SIZE + 1;	
 	} 
-	return address;
+	return address - 1;
 }
 
 HASH_ELEMENT* hash_find(char *text)
