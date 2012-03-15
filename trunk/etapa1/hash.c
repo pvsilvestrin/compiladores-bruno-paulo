@@ -68,19 +68,3 @@ void hash_print()
 		}
 	}
 }
-
-int main(){
-	
-	hash_init();
-
-	hash_insert(23, "lala");
-	hash_insert(24, "sagfa");
-	hash_insert(634, "ag43");
-
-	hash_print();
-	
-	HASH_ELEMENT *aux = hash_find("lala");
-	printf("%d %s\n", aux->token, aux->text);
-	
-	return 0;
-}
