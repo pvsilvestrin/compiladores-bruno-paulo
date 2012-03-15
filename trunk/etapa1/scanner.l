@@ -8,6 +8,8 @@ int numLines = 1;
 
 %}
 
+%x COMM
+
 letter				[A-Za-z_]
 digit				[0-9]
 
@@ -37,18 +39,22 @@ digit				[0-9]
 "&&"				{return OPERATOR_AND;}
 "||"				{return OPERATOR_OR;}
 
-{letter}({letter}|{digit})*	{return TK_IDENTIFIER;}
--?{digit}+			{return LIT_INTEGER;}
--?{digit}+"."{digit}+		{return LIT_FLOATING;}
-\'.\'				{return LIT_CHARACTER;} //pegar "\n"?
-\"[^"]*\"			{return LIT_STRING;}
+{letter}({letter}|{digit})*		{return TK_IDENTIFIER;}
+-?{digit}+						{return LIT_INTEGER;}
+-?{digit}+"."{digit}+			{return LIT_FLOATING;}
+\'.\'							{return LIT_CHARACTER;}
+\"[^"]*\"						{return LIT_STRING;}
 
-"//".*\n			{printf("comentário simples linha %d", lineNumber);}
-"/*"[.\n]*"*/"			{printf("comentário ml linha %d", lineNumber);}
+"//".*							{printf("\tcomentário simples linha %d\n", numLines);}
 
-\n				{numLines++;}
-[ \t]				{}
-.				{return TOKEN_ERROR;}
+"/*"							{BEGIN(COMM); printf("\tcomentário multiplas linhas %d a ", numLines);}
+<COMM>"*/"						{BEGIN(INITIAL); printf("%d\n", numLines);}
+<COMM>"\n"						{numLines++;}
+<COMM>.							
+
+\n								{numLines++;}
+[ \t]							{}
+.								{return TOKEN_ERROR;}
 
 %%
 
@@ -65,7 +71,6 @@ void initMe(void) {
 	hash_init();
 }
 
-//ignorar comentários
 int main(int argc, char *argv[]){
 	if(argc < 2) {
 		printf("Use etapa1 <file_name>\n");
@@ -79,7 +84,7 @@ int main(int argc, char *argv[]){
 	int token = yylex();
 	
 	while(running) {
-		//printf("token\t%d - %s - linha %d\n", token, yytext, getLineNumber());
+		printf("token\t%d - %s - linha %d\n", token, yytext, getLineNumber());
 	
 		switch(token) {
 			case TK_IDENTIFIER: 
@@ -107,6 +112,9 @@ int main(int argc, char *argv[]){
 				break;
 			case TOKEN_ERROR:
 				printf("Erro na linha %d: %s\n", numLines, yytext);
+				break;
+			default:
+				break;
 		}
 	
 		token = yylex();
