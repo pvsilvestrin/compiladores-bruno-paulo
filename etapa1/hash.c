@@ -16,7 +16,7 @@ void hash_init()
 HASH_ELEMENT* hash_insert(int token, char *text)
 {
 	int address;
-	HASH_ELEMENT *element, *aux;
+	HASH_ELEMENT *element;
 
 	element = (HASH_ELEMENT*)malloc(sizeof(HASH_ELEMENT));
 	element->token = token;
@@ -26,10 +26,9 @@ HASH_ELEMENT* hash_insert(int token, char *text)
 	
 	address = hash_address(text);
 	printf("%d\n", address);
-	aux = hashTable[address];
-	while(aux != 0) aux = aux->next;
+	element->next = hashTable[address];
+	hashTable[address] = element;	
 	
-	aux = element;
 	return element; 
 }
 
@@ -79,7 +78,9 @@ int main(){
 	hash_insert(634, "ag43");
 
 	hash_print();
-
-	printf("%d %s\n", hashTable[804]->token, hashTable[804]->text);
+	
+	HASH_ELEMENT *aux = hash_find("lala");
+	printf("%d %s\n", aux->token, aux->text);
+	
 	return 0;
 }
