@@ -1,9 +1,11 @@
 %{
 
 #include "tokens.h"
+#include "hash.h"
 
 int running = 1;
 int numLines = 1;
+
 %}
 
 letter				[A-Za-z_]
@@ -38,12 +40,15 @@ digit				[0-9]
 {letter}({letter}|{digit})*	{return TK_IDENTIFIER;}
 -?{digit}+			{return LIT_INTEGER;}
 -?{digit}+"."{digit}+		{return LIT_FLOATING;}
-\'.\'				{return LIT_CHARACTER;}
-\".*\"				{return LIT_STRING;}
+\'.\'				{return LIT_CHARACTER;} //pegar "\n"?
+\"[^"]*\"			{return LIT_STRING;}
+
+"//".*\n			{printf("comentário simples linha %d", lineNumber);}
+"/*"[.\n]*"*/"			{printf("comentário ml linha %d", lineNumber);}
 
 \n				{numLines++;}
 [ \t]				{}
-.				{printf("Alguma coisa na linha %d - %s\n", numLines, yytext);}
+.				{return TOKEN_ERROR;}
 
 %%
 
@@ -56,6 +61,11 @@ int getLineNumber(void) {
 	return numLines;
 }
 
+void initMe(void) {
+	hash_init();
+}
+
+//ignorar comentários
 int main(int argc, char *argv[]){
 	if(argc < 2) {
 		printf("Use etapa1 <file_name>\n");
@@ -64,18 +74,45 @@ int main(int argc, char *argv[]){
 	
 	yyin = fopen(argv[1], "r");
 	
+	initMe();
 	
 	int token = yylex();
 	
 	while(running) {
-		printf("token\t%d - %s - linha %d\n", token, yytext, getLineNumber());
+		//printf("token\t%d - %s - linha %d\n", token, yytext, getLineNumber());
 	
-		/*switch(token) {
-			case 1: break;
-		}*/
+		switch(token) {
+			case TK_IDENTIFIER: 
+				hash_insert(TK_IDENTIFIER, yytext);
+				break;
+			case LIT_INTEGER:
+				hash_insert(LIT_INTEGER, yytext);
+				break;
+			case LIT_FLOATING:
+				hash_insert(LIT_FLOATING, yytext);
+				break;
+			case LIT_FALSE:
+				hash_insert(LIT_FALSE, yytext);
+				break;
+			case LIT_TRUE:
+				hash_insert(LIT_TRUE, yytext);
+				break;
+			case LIT_CHARACTER:
+				// tirar aspas
+				hash_insert(LIT_CHARACTER, yytext);
+				break;
+			case LIT_STRING:
+				// tirar aspas
+				hash_insert(LIT_STRING, yytext);
+				break;
+			case TOKEN_ERROR:
+				printf("Erro na linha %d: %s\n", numLines, yytext);
+		}
 	
 		token = yylex();
 	}
+	
+	hash_print();
 	
 	return 0;
 }
