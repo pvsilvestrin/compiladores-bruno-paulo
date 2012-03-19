@@ -1,5 +1,5 @@
 %{
-
+//Bruno Nunes e Paulo Silvestrin
 #include "tokens.h"
 #include "hash.c"
 
@@ -48,10 +48,10 @@ digit				[0-9]
 \'.\'							{hash_insert(LIT_CHARACTER, yytext); return LIT_CHARACTER;}
 \"[^"]*\"						{hash_insert(LIT_STRING, yytext); return LIT_STRING;}
 
-"//".*							{printf("\tcomentário simples linha %d\n", numLines);}
+"//".*							{}
 
-"/*"							{BEGIN(COMM); printf("\tcomentário multiplas linhas %d a ", numLines);}
-<COMM>"*/"						{BEGIN(INITIAL); printf("%d\n", numLines);}
+"/*"							{BEGIN(COMM);}
+<COMM>"*/"						{BEGIN(INITIAL);}
 <COMM>"\n"						{numLines++;}
 <COMM>.							
 
@@ -75,4 +75,3 @@ int yywrap(void){
 int getLineNumber(void) {
 	return numLines;
 }
-

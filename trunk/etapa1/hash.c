@@ -1,3 +1,5 @@
+//Bruno Nunes e Paulo Silvestrin
+
 #include <stdlib.h>
 #include <string.h>
 #include "hash.h"

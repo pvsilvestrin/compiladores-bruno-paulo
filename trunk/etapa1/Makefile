@@ -1,3 +1,5 @@
+#Bruno Nunes e Paulo Silvestrin
+
 #
 # UFRGS - Compiladores B - Marcelo Johann - 2009/2 - Etapa 1
 #
