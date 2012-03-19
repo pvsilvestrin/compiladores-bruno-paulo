@@ -1,3 +1,5 @@
+//Bruno Nunes e Paulo Silvestrin
+
 #include <stdio.h>
 
 typedef struct hash_t {
