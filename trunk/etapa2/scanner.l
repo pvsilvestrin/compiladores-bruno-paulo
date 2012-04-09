@@ -1,7 +1,6 @@
 %{
 //Bruno Nunes e Paulo Silvestrin
 
-#include "tokens.h"
 #include "y.tab.h"
 #include "hash.c"
 
@@ -22,7 +21,7 @@ digit				[0-9]
 "floating"			{return KW_FLOATING;}
 "boolean"			{return KW_BOOLEAN;}
 "character"			{return KW_CHARACTER;}
-"declare"			{return KW_DECLARE;}
+"declare"			{printf("KW_DECLARE\n"); return KW_DECLARE;}
 "if"				{return KW_IF;}
 "then"				{return KW_THEN;}
 "else"				{return KW_ELSE;}
@@ -44,13 +43,13 @@ digit				[0-9]
 "&&"				{return OPERATOR_AND;}
 "||"				{return OPERATOR_OR;}
 
-{letter}({letter}|{digit})*		{hash_insert(TK_IDENTIFIER, yytext); return TK_IDENTIFIER;}
+{letter}({letter}|{digit})*		{hash_insert(SYMBOL_IDENTIFIER, yytext); printf("SYMBOL_IDENTIFIER\n"); return TK_IDENTIFIER;}
 -?{digit}+						{hash_insert(LIT_INTEGER, yytext); return LIT_INTEGER;}
 -?{digit}+"."{digit}+			{hash_insert(LIT_FLOATING, yytext); return LIT_FLOATING;}
 \'.\'							{hash_insert(LIT_CHARACTER, yytext); return LIT_CHARACTER;}
 \"[^"]*\"						{hash_insert(LIT_STRING, yytext); return LIT_STRING;}
 
-"//".*							{}
+"//".*							{printf("Comment\n");}
 
 "/*"							{BEGIN(COMM);}
 <COMM>"*/"						{BEGIN(INITIAL);}
