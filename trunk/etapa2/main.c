@@ -12,17 +12,9 @@ int main(int argc, char *argv[]){
 	initMe();
 	
 	yyparse();
-	/*int token = yylex();
-	
-	while(running) {
-		printf("token\t%d - %s - linha %d\n", token, yytext, getLineNumber());
-	
-		token = yylex();
-	}*/
 	
 	hash_print();
 	fclose(yyin);
 	
 	return 0;
 }
-

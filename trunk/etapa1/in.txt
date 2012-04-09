@@ -1,18 +1,4 @@
-bruno integer
-floating if then else
-[ ][]{ 'b' bruno '.'
-} "bruno" '.' "bruno nunes"
-; 5.655 .5 5. -5.2
-,]%
-3221 false truelse
-adsf
-sd // bruasdnfo a sddjjsdj 
-+-
-/*
-9bruno bruno9 . . . 
--bru_ -985564
-*/ aaa
 integer main() {
 	bruno = -5.5;
-	paulo = "paula";
+	paulo = "paula\n";
 }
