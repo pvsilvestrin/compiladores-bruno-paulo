@@ -18,5 +18,5 @@ int main(int argc, char *argv[]){
 
 	printf("Suceesssoooo!");
 	
-	return 0;
+	exit(0);
 }

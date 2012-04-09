@@ -39,7 +39,6 @@ FILE *yyin;
 
 %token TOKEN_ERROR
 
-
 %%
 
 programa : conj_var_global conj_funcao programa
@@ -176,6 +175,6 @@ def_funcao : cabecalho corpo
 #include "main.c"
 
 int yyerror(char *t) {
-	printf("Syntax Error\n");
-	exit(1);
+	printf("Syntax Error on line %d\n", getLineNumber());
+	exit(3);
 }
