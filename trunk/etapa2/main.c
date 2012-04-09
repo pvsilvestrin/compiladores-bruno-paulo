@@ -21,6 +21,7 @@ int main(int argc, char *argv[]){
 	}*/
 	
 	hash_print();
+	fclose(yyin);
 	
 	return 0;
 }
