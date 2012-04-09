@@ -3,9 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-//#include "tokens.h"
-//#include "lex.yy.c"
-//int yylex(void);
+#include "lex.yy.c"
 
 // no scanner "#include y.tab.h" tirar tokens.h
 // compila primeiro parser.y "yacc -d parser.y"
