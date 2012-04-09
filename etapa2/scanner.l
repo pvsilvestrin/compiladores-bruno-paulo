@@ -7,6 +7,16 @@
 int running = 1;
 int numLines = 1;
 
+
+#define SYMBOL_UNDEFINED 0	//quando?
+#define SYMBOL_LIT_INTEGER 1
+#define SYMBOL_LIT_FLOATING 2
+#define SYMBOL_LIT_TRUE 3
+#define SYMBOL_LIT_FALSE 4
+#define SYMBOL_LIT_CHAR 5
+#define SYMBOL_LIT_STRING 6
+#define SYMBOL_IDENTIFIER 7
+
 %}
 
 %x COMM
@@ -31,8 +41,14 @@ digit				[0-9]
 "return"			{return KW_RETURN;}
 "output"			{return KW_OUTPUT;}
 
-"true"				{return LIT_TRUE;}
-"false"				{return LIT_FALSE;}
+"true"				{
+						hash_insert(SYMBOL_LIT_TRUE, yytext);
+						return LIT_TRUE;
+					}
+"false"				{
+						hash_insert(SYMBOL_LIT_FALSE, yytext);
+						return LIT_FALSE;
+					}
 
 [-,;:()[\]{}+\*/<>=!&$]		{return yytext[0];}
 
@@ -44,23 +60,23 @@ digit				[0-9]
 "||"				{return OPERATOR_OR;}
 
 {letter}({letter}|{digit})*		{
-									hash_insert(TK_IDENTIFIER, yytext);
+									hash_insert(SYMBOL_IDENTIFIER, yytext);
 									return TK_IDENTIFIER;
 								}
 -?{digit}+						{
-									hash_insert(LIT_INTEGER, yytext);
+									hash_insert(SYMBOL_LIT_INTEGER, yytext);
 									return LIT_INTEGER;
 								}
 -?{digit}+"."{digit}+			{
-									hash_insert(LIT_FLOATING, yytext);
+									hash_insert(SYMBOL_LIT_FLOATING, yytext);
 									return LIT_FLOATING;
 								}
 \'.\'							{
-									hash_insert(LIT_CHARACTER, yytext);
+									hash_insert(SYMBOL_LIT_CHAR, yytext);
 									return LIT_CHARACTER;
 								}
 \"[^"]*\"						{
-									hash_insert(LIT_STRING, yytext);
+									hash_insert(SYMBOL_LIT_STRING, yytext);
 									return LIT_STRING;
 								}
 
