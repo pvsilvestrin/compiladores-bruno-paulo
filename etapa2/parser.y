@@ -66,11 +66,11 @@ tipo_var : KW_INTEGER
 			| KW_CHARACTER
 			;
 
-conj_funcao : funcao conj_funcao
+conj_funcao : def_funcao ';' conj_funcao
 			|
 			;
 
-funcao : cabecalho corpo
+def_funcao : cabecalho corpo {printf("cabecalho corpo\n");}
 			;
 
 	cabecalho : TK_IDENTIFIER ':' tipo_var '(' lista_parametros ')'
@@ -80,31 +80,35 @@ funcao : cabecalho corpo
 			|
 			;
 
-		lista_parametros_nao_vazia : parametro, lista_parametros_nao_vazia
+		lista_parametros_nao_vazia : parametro ',' lista_parametros_nao_vazia
 			| parametro
 			;
 
 		parametro : TK_IDENTIFIER ':' tipo_var
 			;
 
-	corpo : comando
+	corpo : comando {printf("corpo: comando\n");}
 			;
 
-		comando : bloco_comando
-			| atribuicao
+		comando : bloco_comando {printf("bloco_comando\n");}
+			| controle_fluxo {printf("controle_fluxo\n");}
+			| atribuicao {printf("atribuicao\n");}
 			| input
 			| output
+			| return
+			| decl_var
+			| decl_vetor
 			|
 			;
 
-			bloco_comando : '{' seq_comando '}'
+			bloco_comando : '{' seq_comando '}'	{printf("{ seq_comando }\n");}
 			;
 
-			seq_comando : comando
-				| comando ';' seq_comando
+			seq_comando : comando 	{printf("comando\n");}
+				| comando ';' seq_comando {printf("comando ; seq_comando\n");}
 				;
 
-		atribuicao : TK_IDENTIFIER '=' expressao
+		atribuicao : TK_IDENTIFIER '=' expressao {printf("TK_IDENTIFIER = expressao\n");}
 			| TK_IDENTIFIER '[' expressao ']' '=' expressao
 			;
 
@@ -114,20 +118,60 @@ funcao : cabecalho corpo
 		output : KW_OUTPUT lista_saida
 			;
 
-			// assumindo que a lista do output nao pode ser vazia
-		lista_saida : elemento_lista_saida, lista_saida
+		lista_saida : elemento_lista_saida ',' lista_saida
 			| elemento_lista_saida
 			;
 
-			elementos_lista_saida : LIT_STRING
+			elemento_lista_saida : LIT_STRING
 				| expressao
 				;
 
+		return : KW_RETURN expressao
+			;
 
-		expressao :
+		controle_fluxo : KW_IF '(' expressao ')' KW_THEN comando
+			| KW_IF '(' expressao ')' KW_THEN comando KW_ELSE comando
+			| KW_WHILE '(' expressao ')' comando  		{printf("while\n");}
+			| KW_DO comando KW_WHILE '(' expressao ')'
+			;
+
+		expressao : TK_IDENTIFIER
+			| TK_IDENTIFIER '[' expressao ']'
+			| LIT_INTEGER
+			| LIT_FLOATING
+			| LIT_FALSE
+			| LIT_TRUE
+			| LIT_CHARACTER
+			| LIT_STRING
+			| expressao '+' expressao 		{printf("expressao + expressao\n");}
+			| expressao '-' expressao
+			| expressao '*' expressao
+			| expressao '/' expressao
+			| expressao '<' expressao 		{printf("expressao < expressao\n");}
+			| expressao '>' expressao
+			| expressao '&' expressao
+			| '!' expressao
+			| '(' expressao ')'			   {printf("(expressao)\n");}
+			| expressao OPERATOR_LE expressao
+			| expressao OPERATOR_GE expressao
+			| expressao OPERATOR_EQ expressao
+			| expressao OPERATOR_NE expressao
+			| expressao OPERATOR_AND expressao
+			| expressao OPERATOR_OR expressao
+			| TK_IDENTIFIER '(' lista_expressoes ')' {printf("funcao\n");}
+			;
+
+		lista_expressoes : lista_expressoes_nao_vazia
+			|
+			;
+
+		lista_expressoes_nao_vazia : expressao ',' lista_expressoes_nao_vazia
+			| expressao
 			;
 
 %%
+
+			// assumindo que a lista do output nao pode ser vazia
 
 #include "main.c"
 
