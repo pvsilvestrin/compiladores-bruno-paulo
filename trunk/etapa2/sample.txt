@@ -4,7 +4,7 @@ declare a: integer;
 declare v: integer [10];
 
 main:integer ()
-  {
+/*  {
   declare i: integer;
 
   output "Digite um numero: ";
@@ -25,3 +25,4 @@ outra:integer ();
 maisuma:integer ()
   {
   };
+*/

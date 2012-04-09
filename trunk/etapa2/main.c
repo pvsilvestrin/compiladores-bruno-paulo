@@ -15,6 +15,8 @@ int main(int argc, char *argv[]){
 	
 	hash_print();
 	fclose(yyin);
+
+	printf("Suceesssoooo!");
 	
 	return 0;
 }
