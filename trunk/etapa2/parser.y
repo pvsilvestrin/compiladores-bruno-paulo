@@ -70,7 +70,7 @@ conj_funcao : def_funcao ';' conj_funcao
 			|
 			;
 
-def_funcao : cabecalho corpo {printf("cabecalho corpo\n");}
+def_funcao : cabecalho corpo
 			;
 
 	cabecalho : TK_IDENTIFIER ':' tipo_var '(' lista_parametros ')'
@@ -87,12 +87,12 @@ def_funcao : cabecalho corpo {printf("cabecalho corpo\n");}
 		parametro : TK_IDENTIFIER ':' tipo_var
 			;
 
-	corpo : comando {printf("corpo: comando\n");}
+	corpo : comando
 			;
 
-		comando : bloco_comando {printf("bloco_comando\n");}
-			| controle_fluxo {printf("controle_fluxo\n");}
-			| atribuicao {printf("atribuicao\n");}
+		comando : bloco_comando
+			| controle_fluxo
+			| atribuicao
 			| input
 			| output
 			| return
@@ -101,14 +101,14 @@ def_funcao : cabecalho corpo {printf("cabecalho corpo\n");}
 			|
 			;
 
-			bloco_comando : '{' seq_comando '}'	{printf("{ seq_comando }\n");}
+			bloco_comando : '{' seq_comando '}'
 			;
 
-			seq_comando : comando 	{printf("comando\n");}
-				| comando ';' seq_comando {printf("comando ; seq_comando\n");}
+			seq_comando : comando
+				| comando ';' seq_comando
 				;
 
-		atribuicao : TK_IDENTIFIER '=' expressao {printf("TK_IDENTIFIER = expressao\n");}
+		atribuicao : TK_IDENTIFIER '=' expressao
 			| TK_IDENTIFIER '[' expressao ']' '=' expressao
 			;
 
@@ -131,7 +131,7 @@ def_funcao : cabecalho corpo {printf("cabecalho corpo\n");}
 
 		controle_fluxo : KW_IF '(' expressao ')' KW_THEN comando
 			| KW_IF '(' expressao ')' KW_THEN comando KW_ELSE comando
-			| KW_WHILE '(' expressao ')' comando  		{printf("while\n");}
+			| KW_WHILE '(' expressao ')' comando
 			| KW_DO comando KW_WHILE '(' expressao ')'
 			;
 
@@ -143,22 +143,22 @@ def_funcao : cabecalho corpo {printf("cabecalho corpo\n");}
 			| LIT_TRUE
 			| LIT_CHARACTER
 			| LIT_STRING
-			| expressao '+' expressao 		{printf("expressao + expressao\n");}
+			| expressao '+' expressao
 			| expressao '-' expressao
 			| expressao '*' expressao
 			| expressao '/' expressao
-			| expressao '<' expressao 		{printf("expressao < expressao\n");}
+			| expressao '<' expressao
 			| expressao '>' expressao
 			| expressao '&' expressao
 			| '!' expressao
-			| '(' expressao ')'			   {printf("(expressao)\n");}
+			| '(' expressao ')'
 			| expressao OPERATOR_LE expressao
 			| expressao OPERATOR_GE expressao
 			| expressao OPERATOR_EQ expressao
 			| expressao OPERATOR_NE expressao
 			| expressao OPERATOR_AND expressao
 			| expressao OPERATOR_OR expressao
-			| TK_IDENTIFIER '(' lista_expressoes ')' {printf("funcao\n");}
+			| TK_IDENTIFIER '(' lista_expressoes ')'
 			;
 
 		lista_expressoes : lista_expressoes_nao_vazia

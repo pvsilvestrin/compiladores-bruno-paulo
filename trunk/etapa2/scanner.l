@@ -17,24 +17,24 @@ digit				[0-9]
 
 %%
 
-"integer"			{printf("KW_INTEGER\n");return KW_INTEGER;}
-"floating"			{printf("KW_FLOATING\n");return KW_FLOATING;}
-"boolean"			{printf("KW_BOOLEAN\n");return KW_BOOLEAN;}
-"character"			{printf("KW_CHARACTER\n");return KW_CHARACTER;}
-"declare"			{printf("KW_DECLARE\n");return KW_DECLARE;}
+"integer"			{return KW_INTEGER;}
+"floating"			{return KW_FLOATING;}
+"boolean"			{return KW_BOOLEAN;}
+"character"			{return KW_CHARACTER;}
+"declare"			{return KW_DECLARE;}
 "if"				{return KW_IF;}
 "then"				{return KW_THEN;}
 "else"				{return KW_ELSE;}
-"while"				{printf("KW_WHILE\n");return KW_WHILE;}
+"while"				{return KW_WHILE;}
 "do"				{return KW_DO;}
 "input"				{return KW_INPUT;}
 "return"			{return KW_RETURN;}
-"output"			{printf("KW_OUTPUT\n");return KW_OUTPUT;}
+"output"			{return KW_OUTPUT;}
 
-"true"				{hash_insert(LIT_TRUE, yytext);return LIT_TRUE;}
-"false"				{hash_insert(LIT_FALSE, yytext);return LIT_FALSE;}
+"true"				{return LIT_TRUE;}
+"false"				{return LIT_FALSE;}
 
-[-,;:()[\]{}+\*/<>=!&$]		{printf("%c\n", yytext[0]);return yytext[0];}
+[-,;:()[\]{}+\*/<>=!&$]		{return yytext[0];}
 
 "<="				{return OPERATOR_LE;}
 ">="				{return OPERATOR_GE;}
@@ -45,27 +45,22 @@ digit				[0-9]
 
 {letter}({letter}|{digit})*		{
 									hash_insert(TK_IDENTIFIER, yytext);
-									printf("TK_IDENTIFIER\n");
 									return TK_IDENTIFIER;
 								}
 -?{digit}+						{
 									hash_insert(LIT_INTEGER, yytext);
-									printf("LIT_INTEGER\n");
 									return LIT_INTEGER;
 								}
 -?{digit}+"."{digit}+			{
 									hash_insert(LIT_FLOATING, yytext);
-									printf("LIT_FLOATING\n");
 									return LIT_FLOATING;
 								}
 \'.\'							{
 									hash_insert(LIT_CHARACTER, yytext);
-									printf("LIT_CHARACTER\n");
 									return LIT_CHARACTER;
 								}
 \"[^"]*\"						{
 									hash_insert(LIT_STRING, yytext);
-									printf("LIT_STRING\n");
 									return LIT_STRING;
 								}
 
