@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "lex.yy.c"
+FILE *yyin;
 
 // no scanner "#include y.tab.h" tirar tokens.h
 // compila primeiro parser.y "yacc -d parser.y"
