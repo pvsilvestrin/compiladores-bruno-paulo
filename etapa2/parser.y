@@ -39,6 +39,3 @@ assinalamento: SYMBOL_IDENTIFIER '=' SYMBOL_LIT_INTEGER
 int yyerror(char *t) {
 	printf("Syntax Error\n");
 }
-
-// yyparse() no lugar do while-switch
-

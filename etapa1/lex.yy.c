@@ -532,7 +532,7 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "scanner.l"
 #line 2 "scanner.l"
-
+//Bruno Nunes e Paulo Silvestrin
 #include "tokens.h"
 #include "hash.c"
 
@@ -953,17 +953,17 @@ YY_RULE_SETUP
 case 28:
 YY_RULE_SETUP
 #line 51 "scanner.l"
-{printf("\tcomentário simples linha %d\n", numLines);}
+{}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 53 "scanner.l"
-{BEGIN(COMM); printf("\tcomentário multiplas linhas %d a ", numLines);}
+{BEGIN(COMM);}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 54 "scanner.l"
-{BEGIN(INITIAL); printf("%d\n", numLines);}
+{BEGIN(INITIAL);}
 	YY_BREAK
 case 31:
 /* rule 31 can match eol */
@@ -2014,5 +2014,4 @@ int yywrap(void){
 int getLineNumber(void) {
 	return numLines;
 }
-
 
