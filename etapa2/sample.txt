@@ -17,6 +17,7 @@ main:integer ()
   output "Incrementado algumas vezes fica ",a,"\n"
   };
 
+
 incn:integer (x:integer, n:integer)
   return x+n;
   
@@ -24,4 +25,9 @@ outra:integer ();
 
 maisuma:integer ()
   {
+if (x < 52)
+  then output "x < 52"
+  else return x;
+
+do {a = a + 1; x = 0} while (true || false)
   };
