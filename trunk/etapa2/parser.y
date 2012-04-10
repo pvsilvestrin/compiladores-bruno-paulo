@@ -41,17 +41,14 @@ FILE *yyin;
 
 %%
 
-programa : conj_var_global conj_funcao programa
-			|
-			;
-
-conj_var_global : decl_global conj_var_global
-			|
-			;
+programa : decl_global programa
+		| def_funcao programa
+		| 
+		;
 
 decl_global : decl_var ';'
-			| decl_vetor ';'
-			;
+		| decl_vetor ';'
+		;
 
 decl_var : KW_DECLARE TK_IDENTIFIER ':' tipo_var
 			;
@@ -60,16 +57,12 @@ decl_vetor : KW_DECLARE TK_IDENTIFIER ':' tipo_var '[' LIT_INTEGER ']'
 			;
 
 tipo_var : KW_INTEGER
-			| KW_FLOATING
-			| KW_BOOLEAN
-			| KW_CHARACTER
-			;
+	| KW_FLOATING
+	| KW_BOOLEAN
+	| KW_CHARACTER
+	;
 
-conj_funcao : def_funcao ';' conj_funcao
-			|
-			;
-
-def_funcao : cabecalho corpo
+def_funcao : cabecalho comando ';'
 			;
 
 	cabecalho : TK_IDENTIFIER ':' tipo_var '(' lista_parametros ')'
@@ -86,17 +79,12 @@ def_funcao : cabecalho corpo
 		parametro : TK_IDENTIFIER ':' tipo_var
 			;
 
-	corpo : comando
-			;
-
 		comando : bloco_comando
 			| controle_fluxo
 			| atribuicao
 			| input
 			| output
 			| return
-			| decl_var
-			| decl_vetor
 			|
 			;
 
@@ -105,6 +93,10 @@ def_funcao : cabecalho corpo
 
 			seq_comando : comando
 				| comando ';' seq_comando
+				| decl_var
+				| decl_var ';' seq_comando
+				| decl_vetor
+				| decl_vetor ';' seq_comando
 				;
 
 		atribuicao : TK_IDENTIFIER '=' expressao
@@ -117,13 +109,9 @@ def_funcao : cabecalho corpo
 		output : KW_OUTPUT lista_saida
 			;
 
-		lista_saida : elemento_lista_saida ',' lista_saida
-			| elemento_lista_saida
+		lista_saida : expressao ',' lista_saida
+			| expressao
 			;
-
-			elemento_lista_saida : LIT_STRING
-				| expressao
-				;
 
 		return : KW_RETURN expressao
 			;
