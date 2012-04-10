@@ -3,7 +3,7 @@
 declare a: integer;
 declare v: integer [10];
 
-main:integer ()
+main:integer (a:integer, b:floating )
   {
   declare i: integer;
 
@@ -29,5 +29,7 @@ if (x < 52)
   then output "x < 52"
   else return x;
 
-do {a = a + 1; x = 0} while (true || false)
+	do {a = a + 1; x = 0} while (true || false);
+	while(a < 8)
+	declare a: floating;
   };
