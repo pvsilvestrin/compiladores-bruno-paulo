@@ -8,6 +8,10 @@ FILE *yyin;
 
 %}
 
+%union {
+	HASH_ELEMENT* symbol;
+}
+
 %token KW_INTEGER
 %token KW_FLOATING
 %token KW_BOOLEAN
@@ -38,6 +42,7 @@ FILE *yyin;
 %token LIT_STRING
 
 %token TOKEN_ERROR
+
 
 %left OPERATOR_OR OPERATOR_AND
 %left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE
