@@ -1,0 +1,38 @@
+#define KW_INTEGER 257
+#define KW_FLOATING 258
+#define KW_BOOLEAN 259
+#define KW_CHARACTER 260
+#define KW_DECLARE 261
+#define KW_IF 262
+#define KW_THEN 263
+#define KW_ELSE 264
+#define KW_WHILE 265
+#define KW_DO 266
+#define KW_INPUT 267
+#define KW_RETURN 268
+#define KW_OUTPUT 269
+#define OPERATOR_LE 270
+#define OPERATOR_GE 271
+#define OPERATOR_EQ 272
+#define OPERATOR_NE 273
+#define OPERATOR_AND 274
+#define OPERATOR_OR 275
+#define TK_IDENTIFIER 276
+#define LIT_INTEGER 277
+#define LIT_FLOATING 278
+#define LIT_FALSE 279
+#define LIT_TRUE 280
+#define LIT_CHARACTER 281
+#define LIT_STRING 282
+#define TOKEN_ERROR 283
+#ifdef YYSTYPE
+#undef  YYSTYPE_IS_DECLARED
+#define YYSTYPE_IS_DECLARED 1
+#endif
+#ifndef YYSTYPE_IS_DECLARED
+#define YYSTYPE_IS_DECLARED 1
+typedef union {
+	HASH_ELEMENT* symbol;
+} YYSTYPE;
+#endif /* !YYSTYPE_IS_DECLARED */
+extern YYSTYPE yylval;
