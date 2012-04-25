@@ -1,8 +1,11 @@
 %{
 //Bruno Nunes e Paulo Silvestrin
 
+#include <stdlib.h>
 #include "hash.h"
+#include "astree.h"
 #include "y.tab.h"
+
 
 int running = 1;
 int numLines = 1;
@@ -42,11 +45,11 @@ digit				[0-9]
 "output"			{return KW_OUTPUT;}
 
 "true"				{
-						hash_insert(SYMBOL_LIT_TRUE, yytext);
+						yylval.symbol = hash_insert(SYMBOL_LIT_TRUE, yytext);
 						return LIT_TRUE;
 					}
 "false"				{
-						hash_insert(SYMBOL_LIT_FALSE, yytext);
+						yylval.symbol = hash_insert(SYMBOL_LIT_FALSE, yytext);
 						return LIT_FALSE;
 					}
 
@@ -60,23 +63,23 @@ digit				[0-9]
 "||"				{return OPERATOR_OR;}
 
 {letter}({letter}|{digit})*		{
-									hash_insert(SYMBOL_IDENTIFIER, yytext);
+									yylval.symbol = hash_insert(SYMBOL_IDENTIFIER, yytext);
 									return TK_IDENTIFIER;
 								}
 -?{digit}+						{
-									hash_insert(SYMBOL_LIT_INTEGER, yytext);
+									yylval.symbol = hash_insert(SYMBOL_LIT_INTEGER, yytext);
 									return LIT_INTEGER;
 								}
 -?{digit}+"."{digit}+			{
-									hash_insert(SYMBOL_LIT_FLOATING, yytext);
+									yylval.symbol = hash_insert(SYMBOL_LIT_FLOATING, yytext);
 									return LIT_FLOATING;
 								}
 \'.\'							{
-									hash_insert(SYMBOL_LIT_CHAR, yytext);
+									yylval.symbol = hash_insert(SYMBOL_LIT_CHAR, yytext);
 									return LIT_CHARACTER;
 								}
 \"[^"]*\"						{
-									hash_insert(SYMBOL_LIT_STRING, yytext);
+									yylval.symbol = hash_insert(SYMBOL_LIT_STRING, yytext);
 									return LIT_STRING;
 								}
 
