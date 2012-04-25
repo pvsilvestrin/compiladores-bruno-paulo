@@ -16,7 +16,7 @@ int main(int argc, char *argv[]){
 	
 	yyparse();
 	
-	hash_print();
+	//hash_print();
 	fclose(yyin);
 	
 	exit(0);

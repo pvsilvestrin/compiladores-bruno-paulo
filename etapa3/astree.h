@@ -52,6 +52,14 @@
 
 #define AST_PROG		35
 
+#define AST_FIML		36
+#define AST_INIPAR		37
+#define AST_FIMPAR		38
+#define AST_COMM		39
+
+#define AST_SEQ_COM		40
+#define AST_INICHA		41
+#define AST_FIMCHA		42
 
 #define AST_EMPTY		50
 

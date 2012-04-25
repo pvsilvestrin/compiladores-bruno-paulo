@@ -15,7 +15,15 @@ ASTREE *astCreate(int type, HASH_ELEMENT *symbol, ASTREE *s0, ASTREE *s1, ASTREE
 }
 
 void *astPrintTree(ASTREE *root) {
-	astPrintTree_aux(root, 0);
+	if (root == 0)
+		return;
+	
+	astPrintNode2(root);
+	
+	int i;
+
+	for(i = 0; i < MAX_CHILDREN; i++)
+		astPrintTree(root->children[i]);
 }
 
 void *astPrintTree_aux(ASTREE *root, int level) {
@@ -37,9 +45,9 @@ void *astPrintTree_aux(ASTREE *root, int level) {
 void *astPrintNode2(ASTREE *node) {
 	if (node == 0)
 		return;
-	
+	int i;
 	switch(node->type) {
-		case AST_SYMBOL: printf("Simbolo na hash");
+		case AST_SYMBOL: printf("%s", node->symbol->text);
 			break;
 		case AST_OP_SUM: printf("+");
 			break;
@@ -75,17 +83,17 @@ void *astPrintNode2(ASTREE *node) {
 			break;
 		case AST_DO_WHILE: printf("Do While");
 			break;
-		case AST_RET: printf("Return");
+		case AST_RET: printf("return");
 			break;
-		case AST_INP: printf("Input");
+		case AST_INP: printf("input %s;", node->symbol->text);
 			break;
-		case AST_OUT: printf("Output");
+		case AST_OUT: printf("output");
 			break;
 		case AST_ATR: printf("Atribuicao");
 			break;
 		case AST_SEQ: printf("\n");
 			break;
-		case AST_PARAM: printf("%s : ", node->symbol->text);
+		case AST_PARAM: printf("%s: ", node->symbol->text);
 			break;
 		case AST_T_INT: printf("integer");
 			break;
@@ -95,19 +103,33 @@ void *astPrintNode2(ASTREE *node) {
 			break;
 		case AST_T_CHA: printf("character");
 			break;
-		case AST_LIST_P: printf(" ");
+		case AST_LIST_P: printf("");
 			break;
-		case AST_CAB: printf("%s : ", node->symbol->text);
+		case AST_CAB: printf("%s: ", node->symbol->text);
 			break;
 		case AST_DEF_F: printf("");
 			break;
-		case AST_DECL_VEC: printf("declare %s : ", node->symbol->text);
+		case AST_DECL_VEC: printf("declare %s: ", node->symbol->text);
 			break;
 		case AST_VEC_SIZE: printf(" [%s]", node->symbol->text);
 			break;
-		case AST_DECL_VAR: printf("declare %s : ", node->symbol->text);
+		case AST_DECL_VAR: printf("declare %s: ", node->symbol->text);
 			break;
 		case AST_PROG: printf("\n");
+			break;
+		case AST_FIML: printf(";");
+			break;
+		case AST_INIPAR: printf("(");
+			break;
+		case AST_FIMPAR: printf(")");
+			break;
+		case AST_COMM: printf(", ");
+			break;
+		case AST_SEQ_COM: printf("");
+			break;
+		case AST_INICHA: printf("\n{");
+			break;
+		case AST_FIMCHA: printf("}\n");
 			break;
 		default: printf("UNKNOWN");
 			break;
