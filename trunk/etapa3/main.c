@@ -1,5 +1,8 @@
 //Bruno Nunes e Paulo Silvestrin
+#include <stdlib.h>
+#include <stdio.h>
 
+FILE *yyin;
 
 int main(int argc, char *argv[]){
 	if(argc < 2) {
