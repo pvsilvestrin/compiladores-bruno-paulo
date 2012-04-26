@@ -22,7 +22,7 @@
 #define AST_OP_OR		13
 
 #define AST_LIST_E		14
-#define AST_EXPR		15
+#define AST_CHAM_F		15
 
 #define AST_IF			16
 #define AST_WHILE		17
@@ -49,17 +49,13 @@
 #define AST_DECL_VEC	32
 #define AST_VEC_SIZE	33
 #define AST_DECL_VAR	34
+#define AST_DECL_GL		35
 
-#define AST_PROG		35
+#define AST_PROG		36
 
-#define AST_FIML		36
-#define AST_INIPAR		37
-#define AST_FIMPAR		38
-#define AST_COMM		39
+#define AST_COM 		37
 
-#define AST_SEQ_COM		40
-#define AST_INICHA		41
-#define AST_FIMCHA		42
+#define AST_BLO_COM		40
 
 #define AST_EMPTY		50
 
@@ -72,10 +68,10 @@ typedef struct astreenode
 } ASTREE;
 
 ASTREE *astCreate(int type, HASH_ELEMENT *symbol, ASTREE *s0, ASTREE *s1, ASTREE *s2, ASTREE *s3);
-void *astPrintTree(ASTREE *root);
-void *astPrintTree_aux(ASTREE *root, int level);
-void *astPrintNode(ASTREE *node);
-void *astPrintNode2(ASTREE *node);
+void astPrintTree(ASTREE *root);
+void astPrintTree_aux(ASTREE *root, int level);
+void astPrintNode(ASTREE *node);
+void astPrintTreeSrc(ASTREE *node);
 
 /*
 parser:

@@ -63,21 +63,21 @@ p
 
 %%
 
-p : programa													{ $$ = $1; astPrintTree($$); }
+p : programa													{ $$ = $1; astPrintTree($$); astPrintTreeSrc($$); }
 
 programa : decl_global programa									{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
 	| def_funcao programa										{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
 	| 															{ $$ = astCreate(AST_EMPTY, 0, 0, 0, 0, 0); }
 	;
 
-decl_global : decl_var ';'										{ $$ = $1; }
-	| decl_vetor ';'											{ $$ = $1; }
+decl_global : decl_var ';'										{ $$ = astCreate(AST_DECL_GL, 0, $1, 0, 0, 0); }
+	| decl_vetor ';'											{ $$ = astCreate(AST_DECL_GL, 0, $1, 0, 0, 0); }
 	;
 
-decl_var : KW_DECLARE TK_IDENTIFIER ':' tipo_var				{ $$ = astCreate(AST_DECL_VAR, $2, $4, astCreate(AST_FIML, 0, 0, 0, 0, 0), 0, 0); }
+decl_var : KW_DECLARE TK_IDENTIFIER ':' tipo_var				{ $$ = astCreate(AST_DECL_VAR, $2, $4, 0, 0, 0); }
 	;
 
-decl_vetor : KW_DECLARE TK_IDENTIFIER ':' tipo_var '[' LIT_INTEGER ']' { $$ = astCreate(AST_DECL_VEC, $2, $4, astCreate(AST_VEC_SIZE, $6, 0, 0, 0, 0), astCreate(AST_FIML, 0, 0, 0, 0, 0), 0); }
+decl_vetor : KW_DECLARE TK_IDENTIFIER ':' tipo_var '[' LIT_INTEGER ']' { $$ = astCreate(AST_DECL_VEC, $2, $4, astCreate(AST_VEC_SIZE, $6, 0, 0, 0, 0), 0, 0); }
 	;
 
 tipo_var : KW_INTEGER											{ $$ = astCreate(AST_T_INT, 0, 0, 0, 0, 0); }
@@ -89,30 +89,30 @@ tipo_var : KW_INTEGER											{ $$ = astCreate(AST_T_INT, 0, 0, 0, 0, 0); }
 def_funcao : cabecalho comando ';'								{ $$ = astCreate(AST_DEF_F, 0, $1, $2, 0, 0); }
 	;
 
-cabecalho : TK_IDENTIFIER ':' tipo_var '(' lista_parametros ')'	{ $$ = astCreate(AST_CAB, $1, $3, astCreate(AST_INIPAR, 0, 0, 0, 0, 0), $5, astCreate(AST_FIMPAR, 0, 0, 0, 0, 0)); }
+cabecalho : TK_IDENTIFIER ':' tipo_var '(' lista_parametros ')'	{ $$ = astCreate(AST_CAB, $1, $3, $5, 0, 0); }
 	;
 
 lista_parametros : lista_param_nao_vazia						{ $$ = $1; }
 	|															{ $$ = astCreate(AST_EMPTY, 0, 0, 0, 0, 0); }
 	;	
 
-lista_param_nao_vazia : parametro ',' lista_param_nao_vazia		{ $$ = astCreate(AST_LIST_P, 0, $1, astCreate(AST_COMM, 0, 0, 0, 0, 0), $3, 0); }
+lista_param_nao_vazia : parametro ',' lista_param_nao_vazia		{ $$ = astCreate(AST_LIST_P, 0, $1, $3, 0, 0); }
 	| parametro 												{ $$ = astCreate(AST_LIST_P, 0, $1, 0, 0, 0); }
 	;
 
 parametro : TK_IDENTIFIER ':' tipo_var							{ $$ = astCreate(AST_PARAM, $1, $3, 0, 0, 0); }
 	;
 
-comando : bloco_comando											{ $$ = $1; }
-	| controle_fluxo											{ $$ = $1; }
-	| atribuicao												{ $$ = $1; }
-	| input														{ $$ = $1; }
-	| output													{ $$ = $1; }
-	| return													{ $$ = $1; }
-	|															{ $$ = astCreate(AST_EMPTY, 0, 0, 0, 0, 0); }
+comando : bloco_comando											{ $$ = astCreate(AST_COM, 0, $1, 0, 0, 0); }
+	| controle_fluxo											{ $$ = astCreate(AST_COM, 0, $1, 0, 0, 0); }
+	| atribuicao												{ $$ = astCreate(AST_COM, 0, $1, 0, 0, 0); }
+	| input														{ $$ = astCreate(AST_COM, 0, $1, 0, 0, 0); }
+	| output													{ $$ = astCreate(AST_COM, 0, $1, 0, 0, 0); }
+	| return													{ $$ = astCreate(AST_COM, 0, $1, 0, 0, 0); }
+	|															{ $$ = astCreate(AST_COM, 0, 0, 0, 0, 0); }
 	;
 
-bloco_comando : '{' seq_comando '}'								{ $$ = astCreate(AST_SEQ_COM, 0, astCreate(AST_INICHA, 0, 0, 0, 0, 0), $2, astCreate(AST_FIMCHA, 0, 0, 0, 0, 0), 0); }
+bloco_comando : '{' seq_comando '}'								{ $$ = astCreate(AST_BLO_COM, 0, $2, 0, 0, 0); }
 	;
 
 seq_comando : comando											{ $$ = astCreate(AST_SEQ, 0, $1, 0, 0, 0); }
@@ -130,7 +130,7 @@ atribuicao : TK_IDENTIFIER '=' expressao						{ $$ = astCreate(AST_ATR, $1, $3, 
 input : KW_INPUT TK_IDENTIFIER									{ $$ = astCreate(AST_INP, $2, 0, 0, 0, 0); }
 	;
 
-output : KW_OUTPUT lista_expr_nao_vazia							{ $$ = astCreate(AST_OUT, 0, $2, astCreate(AST_FIML, 0, 0, 0, 0, 0), 0, 0); }
+output : KW_OUTPUT lista_expr_nao_vazia							{ $$ = astCreate(AST_OUT, 0, $2, 0, 0, 0); }
 	;
 
 lista_expr_nao_vazia : expressao ',' lista_expr_nao_vazia		{ $$ = astCreate(AST_LIST_E, 0, $1, $3, 0, 0); }
@@ -167,7 +167,7 @@ expressao : TK_IDENTIFIER						{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
 	| expressao OPERATOR_NE expressao 			{ $$ = astCreate(AST_OP_NE, 0, $1, $3, 0, 0); }
 	| expressao OPERATOR_AND expressao 			{ $$ = astCreate(AST_OP_AND, 0, $1, $3, 0, 0); }
 	| expressao OPERATOR_OR expressao 			{ $$ = astCreate(AST_OP_OR, 0, $1, $3, 0, 0); }
-	| TK_IDENTIFIER '(' lista_expressoes ')' 	{ $$ = astCreate(AST_SYMBOL, $1, $3, 0, 0, 0); }
+	| TK_IDENTIFIER '(' lista_expressoes ')' 	{ $$ = astCreate(AST_CHAM_F, $1, $3, 0, 0, 0); }
 	;
 
 lista_expressoes : lista_expr_nao_vazia			{ $$ = $1; }
