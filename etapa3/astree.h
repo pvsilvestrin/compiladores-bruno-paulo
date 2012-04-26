@@ -72,31 +72,3 @@ void astPrintTree(ASTREE *root);
 void astPrintTree_aux(ASTREE *root, int level);
 void astPrintNode(ASTREE *node);
 void astPrintTreeSrc(ASTREE *node);
-
-/*
-parser:
-#include "hash.h"
-#include "astree.h"
-
-%union {
-	ASTREE *astree;
-	HASH *symbol;
-};
-
-
-%token<symbol> LIT_INTEGER 281
-
-expr:
-'(' expr ')'	{ astPrintTree($2); $$ = $2; }
-expr '+' expr	{ $$ = astCreate(AST_ADD, 0, $1, $3, 0, 0); }
-LIT_INTEGER		{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
- 
- 
-scanner:
-#include stdlib.h
-		hash.h
-		astree.h
-		y.tab.h
-			
-{DIGIT}+ {yylval.symbol=hashInsert(yytext)}
-*/

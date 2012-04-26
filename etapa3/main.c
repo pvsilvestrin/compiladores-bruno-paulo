@@ -3,21 +3,23 @@
 #include <stdio.h>
 
 FILE *yyin;
+FILE *yyout;
 
 int main(int argc, char *argv[]){
-	if(argc < 2) {
-		printf("Use etapa2 <file_name>\n");
+	if(argc < 3) {
+		printf("Use etapa3 <input_file_name> <output_file_name>\n");
 		exit(1);
 	}
 	
 	yyin = fopen(argv[1], "r");
+	yyout = fopen(argv[2], "w");
 	
 	initMe();
 	
 	yyparse();
 	
-	//hash_print();
 	fclose(yyin);
+	fclose(yyout);
 	
 	exit(0);
 }
