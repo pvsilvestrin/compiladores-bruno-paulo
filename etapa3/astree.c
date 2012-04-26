@@ -14,86 +14,169 @@ ASTREE *astCreate(int type, HASH_ELEMENT *symbol, ASTREE *s0, ASTREE *s1, ASTREE
 	return newNode;
 }
 
-void *astPrintTree(ASTREE *root) {
-	if (root == 0)
+void astPrintTree(ASTREE *root) {
+	astPrintTree_aux(root, 1);
+	/*if (root == 0)
 		return;
 	
-	astPrintNode2(root);
+	astPrintNode(root);
 	
 	int i;
 
 	for(i = 0; i < MAX_CHILDREN; i++)
-		astPrintTree(root->children[i]);
+		astPrintTree(root->children[i]);*/
 }
 
-void *astPrintTree_aux(ASTREE *root, int level) {
+
+
+void astPrintTree_aux(ASTREE *root, int level) {
 	if (root == 0)
 		return;
 	
-	/*int i;
+	int i;
 	for (i = 0; i < level; ++i)	{
 		printf("  ");
-	}*/
-	astPrintNode2(root);
+	}
+
+	astPrintNode(root);
 	
-	int i;
 	for(i = 0; i < MAX_CHILDREN; i++){
 		astPrintTree_aux(root->children[i], level+1);
 	}
 }
 
-void *astPrintNode2(ASTREE *node) {
+void astPrintTreeSrc (ASTREE *node) {
 	if (node == 0)
 		return;
+
 	int i;
+
 	switch(node->type) {
 		case AST_SYMBOL: printf("%s", node->symbol->text);
 			break;
-		case AST_OP_SUM: printf("+");
+		case AST_OP_SUM: printf("(");
+			astPrintTreeSrc(node->children[0]);
+			printf(" + ");
+			astPrintTreeSrc(node->children[1]);
+			printf(")");
 			break;
-		case AST_OP_SUB: printf("-");
+		case AST_OP_SUB: printf("(");
+			astPrintTreeSrc(node->children[0]);
+			printf(" - ");
+			astPrintTreeSrc(node->children[1]);
+			printf(")");
 			break;
-		case AST_OP_MUL: printf("*");
+		case AST_OP_MUL: printf("(");
+			astPrintTreeSrc(node->children[0]);
+			printf(" * ");
+			astPrintTreeSrc(node->children[1]);
+			printf(")");
 			break;
-		case AST_OP_DIV: printf("/");
+		case AST_OP_DIV: printf("(");
+			astPrintTreeSrc(node->children[0]);
+			printf(" / ");
+			astPrintTreeSrc(node->children[1]);
+			printf(")");
 			break;
-		case AST_OP_LES: printf("<");
+		case AST_OP_LES: printf("(");
+			astPrintTreeSrc(node->children[0]);
+			printf(" < ");
+			astPrintTreeSrc(node->children[1]);
+			printf(")");
 			break;
-		case AST_OP_GRE: printf(">");
+		case AST_OP_GRE: printf("(");
+			astPrintTreeSrc(node->children[0]);
+			printf(" > ");
+			astPrintTreeSrc(node->children[1]);
+			printf(")");
 			break;
-		case AST_OP_LE: printf("<=");
+		case AST_OP_LE: printf("(");
+			astPrintTreeSrc(node->children[0]);
+			printf(" <= ");
+			astPrintTreeSrc(node->children[1]);
+			printf(")");
 			break;
-		case AST_OP_GE: printf(">=");
+		case AST_OP_GE: printf("(");
+			astPrintTreeSrc(node->children[0]);
+			printf(" >= ");
+			astPrintTreeSrc(node->children[1]);
+			printf(")");
 			break;
-		case AST_OP_EQ: printf("==");
+		case AST_OP_EQ: printf("(");
+			astPrintTreeSrc(node->children[0]);
+			printf(" == ");
+			astPrintTreeSrc(node->children[1]);
+			printf(")");
 			break;
-		case AST_OP_NE: printf("!=");
+		case AST_OP_NE: printf("(");
+			astPrintTreeSrc(node->children[0]);
+			printf(" != ");
+			astPrintTreeSrc(node->children[1]);
+			printf(")");
 			break;
-		case AST_OP_AND: printf("&&");
+		case AST_OP_AND: printf("(");
+			astPrintTreeSrc(node->children[0]);
+			printf(" && ");
+			astPrintTreeSrc(node->children[1]);
+			printf(")");
 			break;
-		case AST_OP_OR: printf("||");
+		case AST_OP_OR: printf("(");
+			astPrintTreeSrc(node->children[0]);
+			printf(" || ");
+			astPrintTreeSrc(node->children[1]);
+			printf(")");
 			break;
 		case AST_LIST_E: printf(" ");
+			astPrintTreeSrc(node->children[0]);
+			if(node->children[1] != 0) {
+				printf(",");
+				astPrintTreeSrc(node->children[1]);
+			}
 			break;
-		case AST_EXPR: printf("Expressao");
+		case AST_IF: printf("if (");
+			astPrintTreeSrc(node->children[0]);
+			printf(")\nthen ");
+			astPrintTreeSrc(node->children[1]);
+			if(node->children[2] != 0) {
+				printf("\nelse ");
+				astPrintTreeSrc(node->children[2]);
+			}
 			break;
-		case AST_IF: printf("If");
+		case AST_WHILE:printf("while (");
+			astPrintTreeSrc(node->children[0]);
+			printf(")\n");
+			astPrintTreeSrc(node->children[1]);
 			break;
-		case AST_WHILE: printf("While");
+		case AST_DO_WHILE: printf("do");
+			astPrintTreeSrc(node->children[0]);
+			printf("\nwhile (");
+			astPrintTreeSrc(node->children[1]);
+			printf(")");
 			break;
-		case AST_DO_WHILE: printf("Do While");
+		case AST_RET: printf("return ");
+			astPrintTreeSrc(node->children[0]);
 			break;
-		case AST_RET: printf("return");
-			break;
-		case AST_INP: printf("input %s;", node->symbol->text);
+		case AST_INP: printf("input %s", node->symbol->text);
 			break;
 		case AST_OUT: printf("output");
+			astPrintTreeSrc(node->children[0]);
 			break;
-		case AST_ATR: printf("Atribuicao");
+		case AST_ATR: printf("%s = ", node->symbol->text);
+			astPrintTreeSrc(node->children[0]);
+			break;
+		case AST_CHAM_F: printf("%s (", node->symbol->text);
+			astPrintTreeSrc(node->children[0]);
+			printf(")");
 			break;
 		case AST_SEQ: printf("\n");
+			astPrintTreeSrc(node->children[0]);
+			if(node->children[1] != 0) {
+				printf(";");
+				astPrintTreeSrc(node->children[1]);
+			}
 			break;
 		case AST_PARAM: printf("%s: ", node->symbol->text);
+			astPrintTreeSrc(node->children[0]);
 			break;
 		case AST_T_INT: printf("integer");
 			break;
@@ -103,33 +186,46 @@ void *astPrintNode2(ASTREE *node) {
 			break;
 		case AST_T_CHA: printf("character");
 			break;
-		case AST_LIST_P: printf("");
+		case AST_LIST_P: astPrintTreeSrc(node->children[0]);
+			if(node->children[1] != 0) {
+				printf(", ");
+				astPrintTreeSrc(node->children[1]);
+			}
 			break;
 		case AST_CAB: printf("%s: ", node->symbol->text);
+			astPrintTreeSrc(node->children[0]);
+			printf("(");
+			astPrintTreeSrc(node->children[1]);
+			printf(")\n");
 			break;
-		case AST_DEF_F: printf("");
+		case AST_DEF_F: printf("\n");
+			astPrintTreeSrc(node->children[0]);
+			astPrintTreeSrc(node->children[1]);
+			printf(";");
 			break;
 		case AST_DECL_VEC: printf("declare %s: ", node->symbol->text);
+			astPrintTreeSrc(node->children[0]);
+			astPrintTreeSrc(node->children[1]);
 			break;
 		case AST_VEC_SIZE: printf(" [%s]", node->symbol->text);
 			break;
 		case AST_DECL_VAR: printf("declare %s: ", node->symbol->text);
+			astPrintTreeSrc(node->children[0]);
+			break;
+		case AST_DECL_GL: astPrintTreeSrc(node->children[0]);
+			printf(";");
 			break;
 		case AST_PROG: printf("\n");
+			for(i = 0; i < MAX_CHILDREN; i++)
+				astPrintTreeSrc(node->children[i]);
 			break;
-		case AST_FIML: printf(";");
+		case AST_BLO_COM: printf("{");
+			astPrintTreeSrc(node->children[0]);
+			printf("\n}");
 			break;
-		case AST_INIPAR: printf("(");
+		case AST_COM: astPrintTreeSrc(node->children[0]);
 			break;
-		case AST_FIMPAR: printf(")");
-			break;
-		case AST_COMM: printf(", ");
-			break;
-		case AST_SEQ_COM: printf("");
-			break;
-		case AST_INICHA: printf("\n{");
-			break;
-		case AST_FIMCHA: printf("}\n");
+		case AST_EMPTY: printf("");
 			break;
 		default: printf("UNKNOWN");
 			break;
@@ -142,7 +238,7 @@ void *astPrintNode2(ASTREE *node) {
 }
 
 
-void *astPrintNode(ASTREE *node) {
+void astPrintNode(ASTREE *node) {
 	if (node == 0)
 		return;
 	
@@ -177,8 +273,6 @@ void *astPrintNode(ASTREE *node) {
 			break;
 		case AST_LIST_E: printf("Lista de expressoes");
 			break;
-		case AST_EXPR: printf("Expressao");
-			break;
 		case AST_IF: printf("If");
 			break;
 		case AST_WHILE: printf("While");
@@ -192,6 +286,8 @@ void *astPrintNode(ASTREE *node) {
 		case AST_OUT: printf("Output");
 			break;
 		case AST_ATR: printf("Atribuicao");
+			break;
+		case AST_CHAM_F: printf("Chamada de funcao");
 			break;
 		case AST_SEQ: printf("Sequencia de comandos");
 			break;
@@ -217,7 +313,13 @@ void *astPrintNode(ASTREE *node) {
 			break;
 		case AST_DECL_VAR: printf("Declaracao de variavel");
 			break;
+		case AST_DECL_GL: printf("Declaracao global");
+			break;
 		case AST_PROG: printf("Programa");
+			break;
+		case AST_BLO_COM: printf("Bloco de comandos");
+			break;
+		case AST_EMPTY: printf("Empty");
 			break;
 		default: printf("UNKNOWN");
 			break;
