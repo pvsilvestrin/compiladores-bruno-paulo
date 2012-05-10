@@ -13,6 +13,7 @@ ASTREE *astCreate(int type, HASH_ELEMENT *symbol, ASTREE *s0, ASTREE *s1, ASTREE
 	newNode->children[1] = s1;
 	newNode->children[2] = s2;
 	newNode->children[3] = s3;
+	newNode->lineNumber = getLineNumber();
 	return newNode;
 }
 
@@ -316,4 +317,15 @@ void astPrintNode(ASTREE *node) {
 		printf(", %s", node->symbol->text);
 		
 	printf(");\n");
+}
+
+
+int dataTypeMap(int type) {
+	switch(type) {
+		case AST_T_INT: return DATATYPE_INTEGER;
+		case AST_T_FLO: return DATATYPE_FLOATING;
+		case AST_T_CHA: return DATATYPE_CHARACTER;
+		case AST_T_BOO: return DATATYPE_BOOLEAN;
+		default: return 0;
+	}
 }

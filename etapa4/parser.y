@@ -62,7 +62,7 @@ FILE *yyin;
 
 %%
 
-p : programa													{ $$ = $1; astPrintTree($$); astPrintTreeSrc($$); checkDeclarations($$); checkUndeclared(); checkUtilization($$); }
+p : programa													{ $$ = $1; astPrintTree($$); astPrintTreeSrc($$); checkDeclarations($$); hash_print(); /*checkUndeclared(); /*checkUtilization($$);*/ }
 
 programa : decl_global programa									{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
 	| def_funcao programa										{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
@@ -73,7 +73,7 @@ decl_global : decl_var ';'										{ $$ = astCreate(AST_DECL_GL, 0, $1, 0, 0, 0
 	| decl_vetor ';'											{ $$ = astCreate(AST_DECL_GL, 0, $1, 0, 0, 0); }
 	;
 
-decl_var : KW_DECLARE TK_IDENTIFIER ':' tipo_var				{ $$ = astCreate(AST_DECL_VAR, $2, $4, 0, 0, 0); }
+decl_var : KW_DECLARE TK_IDENTIFIER ':' tipo_var				{ $$ = astCreate(AST_DECL_VAR, $2, $4, 0, 0, 0); $2->dataType = dataTypeMap($4->type); }
 	;
 
 decl_vetor : KW_DECLARE TK_IDENTIFIER ':' tipo_var '[' LIT_INTEGER ']' { $$ = astCreate(AST_DECL_VEC, $2, $4, astCreate(AST_VEC_SIZE, $6, 0, 0, 0, 0), 0, 0); }

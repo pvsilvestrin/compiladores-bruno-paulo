@@ -1,6 +1,9 @@
 // UFRGS - Compiladores - Marcelo Johann - 2012/1
 
 declare a: integer;
+declare sdfadsf: integer [10];
+declare v: integer [10];
+declare a: integer;
 declare v: integer [10];
 
 main:integer (a:integer, b:floating )
@@ -32,5 +35,7 @@ if (x < (52 + 5))
 
 	do {a = a + 1; x = 0} while (true || false);
 	while(a < 8)
-	{}//declare a: floating;}
+	{/*declare a: floating;*/}
   };
+
+declare sdfadsf: integer [10];

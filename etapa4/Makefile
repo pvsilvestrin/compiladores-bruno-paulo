@@ -9,8 +9,8 @@
 # and #include "main.c" in the last part of the scanner.l
 #
 
-etapa3: main.o hash.o astree.o y.tab.o lex.yy.o semantic.o 
-	gcc -o etapa3 main.o hash.o lex.yy.o y.tab.o astree.o semantic.o
+etapa4: main.o hash.o astree.o y.tab.o lex.yy.o semantic.o 
+	gcc -o etapa4 main.o hash.o lex.yy.o y.tab.o astree.o semantic.o
 
 main.o: main.c
 	gcc -c main.c
@@ -38,5 +38,5 @@ lex.yy.c: scanner.l
 
 
 clean:
-	rm *.o lex.yy.c y.tab.c y.tab.h etapa3
+	rm *.o lex.yy.c y.tab.c y.tab.h etapa4
 
