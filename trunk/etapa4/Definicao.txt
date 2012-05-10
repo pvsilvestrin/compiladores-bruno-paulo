@@ -1,0 +1,9 @@
+Expressões: Operações possiveis
+
+DONEN->Não permitir declaração dentro de função. Só existe decalração global
+
+-> Permitir o maior numero possivel de operações. string nao
+-> O valor mais amplo sempre ganha
+
+check declarations
+check undeclared check usage 

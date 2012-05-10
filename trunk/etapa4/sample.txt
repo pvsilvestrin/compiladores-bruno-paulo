@@ -1,20 +1,19 @@
 // UFRGS - Compiladores - Marcelo Johann - 2012/1
 
 declare a: integer;
-
-/*
 declare v: integer [10];
 
 main:integer (a:integer, b:floating )
   {
-  declare i: integer;
+  //declare i: integer;
 
   output "Digite um numero: ";
   input a;
+
   while (i<10)
     {
-    a = incn(a,1);
-    i = i + 1;
+    a = incn(a,1, 4, 5, 6, 7, 8, ((i + 1) + (4 + g)));
+    i = ((i + 1) + (4 + g));
     };
   output "Incrementado algumas vezes fica ",a,"\n"
   };
@@ -27,11 +26,11 @@ outra:integer ();
 
 maisuma:integer ()
   {
-if (x < 52)
+if (x < (52 + 5))
   then output "x < 52"
   else return x;
 
 	do {a = a + 1; x = 0} while (true || false);
 	while(a < 8)
-	{declare a: floating;}
+	{}//declare a: floating;}
   };
