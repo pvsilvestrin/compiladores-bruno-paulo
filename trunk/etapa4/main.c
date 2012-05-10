@@ -7,7 +7,7 @@ FILE *yyout;
 
 int main(int argc, char *argv[]){
 	if(argc < 3) {
-		printf("Use etapa3 <input_file_name> <output_file_name>\n");
+		printf("Use etapa4 <input_file_name> <output_file_name>\n");
 		exit(1);
 	}
 	

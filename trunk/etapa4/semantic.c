@@ -8,21 +8,20 @@ void checkDeclarations(ASTREE *root){
 
 	if(root == 0) return;
 
-	if(root->type == SYMBOL_VARIABLE ||
-		root->type == SYMBOL_VECTOR ||
-		root->type == SYMBOL_FUNCTION){
+	// do some work
+
+	if(root->type == AST_DECL_VAR ||
+		root->type == AST_DECL_VEC ||
+		root->type == AST_DEF_F){
 
 		if(root->symbol == 0) {
-			printf("Declaration is missing the identifier name");
+			printf("Line %d: Declaration is missing the identifier name.\n", root->lineNumber);
 		} else {
 			if (root->symbol->type != SYMBOL_IDENTIFIER)
-				printf("symbol %s already defined", root->symbol->text);
-			if (root->symbol->type == SYMBOL_IDENTIFIER)
-				printf("symbol %s already defined", root->symbol->text);
-			if (root->symbol->type != SYMBOL_IDENTIFIER)
-				printf("symbol %s already defined", root->symbol->text);
-			if (root->symbol->type != SYMBOL_IDENTIFIER)
-				printf("symbol %s already defined", root->symbol->text);
+				printf("Line %d: Symbol %s already defined.\n", root->lineNumber, root->symbol->text);
+			if (root->type == AST_DECL_VAR) root->symbol->type = SYMBOL_VARIABLE;
+			if (root->type == AST_DECL_VEC) root->symbol->type = SYMBOL_VECTOR;
+			if (root->type == AST_DEF_F) root->symbol->type = SYMBOL_FUNCTION;
 		}
 	}
 
@@ -36,17 +35,27 @@ void checkUtilization(ASTREE *root){
 	
 	int i;
 
-	if(root->type == AST_SYMBOL){
-
+	// Make sure variables are not being used as scalars
+	if(root->type == AST_SYMBOL ||
+		root->type == AST_ATR){
 		if(root->symbol == 0) {
-			printf("Declaration is missing the identifier name");
+			printf("Line %d: Declaration is missing the identifier name.\n", root->lineNumber);
+		} else if (root->symbol->type == SYMBOL_VECTOR ||
+					root->symbol->type == SYMBOL_FUNCTION)
+				printf("Line %d: Declared function or vector %s being used as scalar type.\n", root->lineNumber, root->symbol->text);
+		
+	}
+
+	// Make sure only declared functions are being called
+	if(root->type == AST_CHAM_F){
+		if(root->symbol == 0) {
+			printf("Line %d: Declaration is missing the identifier name.\n", root->lineNumber);
 		} else {
-			if (root->symbol->type == SYMBOL_VECTOR ||
-				root->symbol->type == SYMBOL_FUNCTION)
-				printf("DECLARED FUNCTION OR VECTOR BEING USED AS SCALAR TYPE");
-			//NÃO FUNCIONOU NA IMPLEMENTAÇÃO DELE
+			if (root->symbol->type != SYMBOL_FUNCTION)
+				printf("Line %d: Trying to call function %s declared as variable or vector.\n", root->lineNumber, root->symbol->text);
 		}
 	}
+
 
 	for (i = 0; i < MAX_CHILDREN; ++i) {
 		checkDeclarations(root->children[i]);

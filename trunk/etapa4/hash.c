@@ -15,7 +15,7 @@ void hash_init()
 		hashTable[i] = 0;
 }
 
-HASH_ELEMENT* hash_insert(int token, char *text)
+HASH_ELEMENT* hash_insert(int type, char *text)
 {
 	int address;
 	HASH_ELEMENT *element;
@@ -24,7 +24,7 @@ HASH_ELEMENT* hash_insert(int token, char *text)
 		return element;
 
 	element = (HASH_ELEMENT*)malloc(sizeof(HASH_ELEMENT));
-	element->token = token;
+	element->type = type;
 	element->text = (char*)calloc(strlen(text)+1,sizeof(char));
 	strcpy(element->text, text);
 	element->next = 0;
@@ -64,11 +64,12 @@ HASH_ELEMENT* hash_find(char *text)
 void hash_print()
 {
 	int i;
+	printf("\n---------- hash_print:\n");
 	HASH_ELEMENT *aux;
 	for(i = 0; i < SIZE; ++i){
 		aux = hashTable[i];
 		while(aux != 0) {
-			printf("%d %s\n", aux->token, aux->text);
+			printf("--%d %s %d %d\n", aux->type, aux->text, aux->type, aux->dataType);
 			aux = aux->next;
 		}
 	}
