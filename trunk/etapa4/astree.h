@@ -6,8 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_CHILDREN	4
-
 #define AST_SYMBOL		1
 
 #define AST_OP_SUM		2
@@ -46,7 +44,6 @@
 
 #define AST_LIST_P		29
 
-#define AST_CAB			30
 #define AST_DEF_F		31
 #define AST_DECL_VEC	32
 #define AST_VEC_SIZE	33

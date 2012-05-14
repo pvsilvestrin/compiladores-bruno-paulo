@@ -24,6 +24,9 @@ return (x + n);
 outra: integer()
 ;
 
+incn: integer()
+return 0;
+
 maisuma: integer()
 {
 if ((x < (52 + 5)))

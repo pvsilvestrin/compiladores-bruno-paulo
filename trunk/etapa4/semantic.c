@@ -58,6 +58,6 @@ void checkUtilization(ASTREE *root){
 
 
 	for (i = 0; i < MAX_CHILDREN; ++i) {
-		checkDeclarations(root->children[i]);
+		checkUtilization(root->children[i]);
 	}
 }

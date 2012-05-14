@@ -27,6 +27,9 @@ incn:integer (x:integer, n:integer)
   
 outra:integer ();
 
+incn:integer ()
+  return 0;
+
 maisuma:integer ()
   {
 if (x < (52 + 5))
