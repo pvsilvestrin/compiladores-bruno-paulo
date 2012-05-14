@@ -27,6 +27,7 @@
 #define DATATYPE_FLOATING		2
 #define DATATYPE_CHARACTER		3
 #define DATATYPE_BOOLEAN		4
+#define DATATYPE_STRING			5
 
 typedef struct astreenode
 {
@@ -49,6 +50,5 @@ HASH_ELEMENT* hash_insert(int type, char *text);
 int hash_address(char *text);
 HASH_ELEMENT* hash_find(char *text);
 void hash_print();
-void checkUndeclared();
 
 #endif

@@ -46,6 +46,12 @@ void astPrintTreeSrc (ASTREE *node) {
 	switch(node->type) {
 		case AST_SYMBOL: fprintf(yyout, "%s", node->symbol->text);
 			break;
+		case AST_SYMBOL_VEC: fprintf(yyout, "%s[", node->symbol->text);
+			astPrintTreeSrc(node->children[0]);
+			fprintf(yyout, "]");
+			break;
+		case AST_SYMBOL_LIT: fprintf(yyout, "%s", node->symbol->text);
+			break;
 		case AST_OP_SUM: fprintf(yyout, "(");
 			astPrintTreeSrc(node->children[0]);
 			fprintf(yyout, " + ");
@@ -156,6 +162,11 @@ void astPrintTreeSrc (ASTREE *node) {
 		case AST_ATR: fprintf(yyout, "%s = ", node->symbol->text);
 			astPrintTreeSrc(node->children[0]);
 			break;
+		case AST_ATR_VEC: fprintf(yyout, "%s[", node->symbol->text);
+			astPrintTreeSrc(node->children[0]);
+			fprintf(yyout, "] = ");
+			astPrintTreeSrc(node->children[1]);
+			break;
 		case AST_CHAM_F: fprintf(yyout, "%s (", node->symbol->text);
 			astPrintTreeSrc(node->children[0]);
 			fprintf(yyout, ")");
@@ -230,6 +241,10 @@ void astPrintNode(ASTREE *node) {
 	switch(node->type) {
 		case AST_SYMBOL: printf("Simbolo na hash");
 			break;
+		case AST_SYMBOL_VEC: printf("Simbolo tipo vetor na hash");
+			break;
+		case AST_SYMBOL_LIT: printf("Simbolo literal na hash");
+			break;
 		case AST_OP_SUM: printf("Operacao +");
 			break;
 		case AST_OP_SUB: printf("Operacao -");
@@ -270,6 +285,8 @@ void astPrintNode(ASTREE *node) {
 			break;
 		case AST_ATR: printf("Atribuicao");
 			break;
+		case AST_ATR_VEC: printf("Atribuicao vetor");
+			break;
 		case AST_CHAM_F: printf("Chamada de funcao");
 			break;
 		case AST_SEQ: printf("Sequencia de comandos");
@@ -308,8 +325,10 @@ void astPrintNode(ASTREE *node) {
 			break;
 	}
 	
-	if (node->symbol != 0)
-		printf(", %s", node->symbol->text);
+	if (node->symbol != 0) {
+		printf(", %s - ", node->symbol->text);
+		printDataType(node->symbol->dataType);
+	}
 		
 	printf(");\n");
 }
@@ -322,5 +341,20 @@ int dataTypeMap(int type) {
 		case AST_T_CHA: return DATATYPE_CHARACTER;
 		case AST_T_BOO: return DATATYPE_BOOLEAN;
 		default: return 0;
+	}
+}
+
+void printDataType(int dataType) {
+	switch(dataType) {
+		case DATATYPE_INTEGER: printf("integer");
+			break;
+		case DATATYPE_FLOATING: printf("floating");
+			break;
+		case DATATYPE_CHARACTER: printf("character");
+			break;
+		case DATATYPE_BOOLEAN: printf("boolean");
+			break;
+		default: printf("undefined");
+			break;
 	}
 }

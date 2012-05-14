@@ -74,7 +74,3 @@ void hash_print()
 		}
 	}
 }
-
-void checkUndeclared() {
-	
-}
