@@ -7,6 +7,7 @@
 
 //typedef ASTREE; 
 
+#define MAX_CHILDREN	4
 
 #define SYMBOL_UNDEFINED 0	//quando?
 

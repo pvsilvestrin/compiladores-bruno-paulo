@@ -184,15 +184,12 @@ void astPrintTreeSrc (ASTREE *node) {
 				astPrintTreeSrc(node->children[1]);
 			}
 			break;
-		case AST_CAB: fprintf(yyout, "%s: ", node->symbol->text);
+		case AST_DEF_F: fprintf(yyout, "\n%s: ", node->symbol->text);
 			astPrintTreeSrc(node->children[0]);
 			fprintf(yyout, "(");
 			astPrintTreeSrc(node->children[1]);
 			fprintf(yyout, ")\n");
-			break;
-		case AST_DEF_F: fprintf(yyout, "\n");
-			astPrintTreeSrc(node->children[0]);
-			astPrintTreeSrc(node->children[1]);
+			astPrintTreeSrc(node->children[2]);
 			fprintf(yyout, ";");
 			break;
 		case AST_DECL_VEC: fprintf(yyout, "declare %s: ", node->symbol->text);
@@ -288,9 +285,7 @@ void astPrintNode(ASTREE *node) {
 		case AST_T_CHA: printf("Tipo character");
 			break;
 		case AST_LIST_P: printf("Lista de parametros");
-			break;
-		case AST_CAB: printf("Cabecalho");
-			break;
+			break;	
 		case AST_DEF_F: printf("Definicao de funcao");
 			break;
 		case AST_DECL_VEC: printf("Declaracao de vetor");
