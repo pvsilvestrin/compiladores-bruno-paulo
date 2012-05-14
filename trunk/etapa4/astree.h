@@ -7,6 +7,8 @@
 #include <stdlib.h>
 
 #define AST_SYMBOL		1
+#define AST_SYMBOL_VEC	40
+#define AST_SYMBOL_LIT	42
 
 #define AST_OP_SUM		2
 #define AST_OP_SUB		3
@@ -33,6 +35,7 @@
 #define AST_OUT			21
 
 #define AST_ATR			22
+#define AST_ATR_VEC		41
 
 #define AST_SEQ			23
 #define AST_PARAM		24
@@ -73,5 +76,6 @@ void astPrintTree_aux(ASTREE *root, int level);
 void astPrintNode(ASTREE *node);
 void astPrintTreeSrc(ASTREE *node);
 int dataTypeMap(int type);
+void printDataType(int dataType);
 
 #endif
