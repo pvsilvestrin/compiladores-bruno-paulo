@@ -7,6 +7,7 @@
 
 //typedef ASTREE; 
 
+
 #define SYMBOL_UNDEFINED 0	//quando?
 
 #define SYMBOL_LIT_INTEGER 1
@@ -26,10 +27,18 @@
 #define DATATYPE_CHARACTER		3
 #define DATATYPE_BOOLEAN		4
 
+typedef struct astreenode
+{
+	int type;
+	int lineNumber;
+	struct hash_t *symbol;
+	struct astreenode *children[MAX_CHILDREN];
+} ASTREE;
+
 typedef struct hash_t {
 	int type;
 	int dataType;
-	//ASTREE *ast;
+	ASTREE *ast;
 	char *text;
 	struct hash_t *next;
 } HASH_ELEMENT;
