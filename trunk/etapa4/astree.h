@@ -62,13 +62,13 @@
 #define AST_EMPTY		39
 
 
-typedef struct astreenode
+/*typedef struct astreenode
 {
 	int type;
 	int lineNumber;
 	HASH_ELEMENT *symbol;
 	struct astreenode *children[MAX_CHILDREN];
-} ASTREE;
+} ASTREE;*/
 
 ASTREE *astCreate(int type, HASH_ELEMENT *symbol, ASTREE *s0, ASTREE *s1, ASTREE *s2, ASTREE *s3);
 void astPrintTree(ASTREE *root);
