@@ -69,7 +69,7 @@ void hash_print()
 	for(i = 0; i < SIZE; ++i){
 		aux = hashTable[i];
 		while(aux != 0) {
-			printf("--%d %s %d %d\n", aux->type, aux->text, aux->type, aux->dataType);
+			printf("--%s %d %d\n", aux->text, aux->type, aux->dataType);
 			aux = aux->next;
 		}
 	}

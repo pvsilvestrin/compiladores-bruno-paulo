@@ -47,7 +47,7 @@ void checkUtilization(ASTREE *root){
 	}
 
 	// Make sure only declared vectors are being used as vectors
-	if(root->type == AST_SYMBOL_VEC || root->type == AST_ATR_VEC){
+	else if(root->type == AST_SYMBOL_VEC || root->type == AST_ATR_VEC){
 		if (root->symbol->type == SYMBOL_VARIABLE) {
 			printf("Line %d: Declared variable %s being used as vector type.\n", root->lineNumber, root->symbol->text);
 		} else if (root->symbol->type == SYMBOL_FUNCTION) {
@@ -58,7 +58,7 @@ void checkUtilization(ASTREE *root){
 	}
 
 	// Make sure only declared functions are being used as functions
-	if(root->type == AST_CHAM_F){
+	else if(root->type == AST_CHAM_F){
 		if (root->symbol->type == SYMBOL_VARIABLE) {
 			printf("Line %d: Declared variable %s being used as function type.\n", root->lineNumber, root->symbol->text);
 		} else if (root->symbol->type == SYMBOL_VECTOR) {
@@ -78,6 +78,7 @@ void checkDataTypes(ASTREE *root) {
 	if(root == 0) return;
 	
 	int i;
+
 
 	// Make sure the arithmetic expressions have the correct operators types
 	if(root->type == AST_OP_SUM || root->type == AST_OP_SUB || root->type == AST_OP_MUL || root->type == AST_OP_DIV) {
@@ -114,30 +115,104 @@ void checkDataTypes(ASTREE *root) {
 		}
 	}
 
-	// Make sure the relational expressions have the correct operators types
-	if(root->type == AST_OP_LES || root->type == AST_OP_GRE || root->type == AST_OP_LE || root->type == AST_OP_GE
-		 || root->type == AST_OP_EQ || root->type == AST_OP_NE) {
 
+	// Make sure the relational expressions have the correct operators types
+	else if(root->type == AST_OP_LES || root->type == AST_OP_GRE || root->type == AST_OP_LE || root->type == AST_OP_GE
+		 || root->type == AST_OP_EQ || root->type == AST_OP_NE) {
+		if(root->children[0]->type != AST_OP_SUM &&
+			root->children[0]->type != AST_OP_SUB &&
+			root->children[0]->type != AST_OP_MUL &&
+			root->children[0]->type != AST_OP_DIV) {
+			if(root->children[0]->type == AST_SYMBOL ||
+				root->children[0]->type == AST_SYMBOL_VEC ||
+				root->children[0]->type == AST_SYMBOL_LIT) {
+				if(root->children[0]->symbol->dataType != DATATYPE_INTEGER &&
+					root->children[0]->symbol->dataType != DATATYPE_FLOATING &&
+					root->children[0]->symbol->dataType != DATATYPE_CHARACTER) {
+					printf("Line %d: Operator %s is of an invalid type for relational expression.\n", root->lineNumber, root->children[0]->symbol->text);
+				}
+			}
+			else printf("Line %d: Relational expression contains an invalid operator type.\n", root->lineNumber);
+		}
+
+		if(root->children[1]->type != AST_OP_SUM &&
+			root->children[1]->type != AST_OP_SUB &&
+			root->children[1]->type != AST_OP_MUL &&
+			root->children[1]->type != AST_OP_DIV) {
+			if(root->children[1]->type == AST_SYMBOL ||
+				root->children[1]->type == AST_SYMBOL_VEC ||
+				root->children[1]->type == AST_SYMBOL_LIT) {
+				if(root->children[1]->symbol->dataType != DATATYPE_INTEGER &&
+					root->children[1]->symbol->dataType != DATATYPE_FLOATING &&
+					root->children[1]->symbol->dataType != DATATYPE_CHARACTER) {
+					printf("Line %d: Operator %s is of an invalid type for relational expression.\n", root->lineNumber, root->children[1]->symbol->text);
+				}
+			}
+			else printf("Line %d: Relational expression contains an invalid operator type.\n", root->lineNumber);
+		}
 	}
 
 
+	// Make sure the logical expressions have the correct operators types
+	else if(root->type == AST_OP_AND || root->type == AST_OP_OR) {
+		if(root->children[0]->type != AST_OP_LES &&
+			root->children[0]->type != AST_OP_GRE &&
+			root->children[0]->type != AST_OP_LE &&
+			root->children[0]->type != AST_OP_GE &&
+			root->children[0]->type != AST_OP_EQ &&
+			root->children[0]->type != AST_OP_NE &&
+			root->children[0]->type != AST_OP_AND &&
+			root->children[0]->type != AST_OP_OR) {
+			if(root->children[0]->type == AST_SYMBOL ||
+				root->children[0]->type == AST_SYMBOL_VEC ||
+				root->children[0]->type == AST_SYMBOL_LIT) {
+				if(root->children[0]->symbol->dataType != DATATYPE_BOOLEAN) {
+					printf("Line %d: Operator %s is of an invalid type for logical expression.\n", root->lineNumber, root->children[0]->symbol->text);
+				}
+			}
+			else printf("Line %d: Logical expression contains an invalid operator type.\n", root->lineNumber);
+		}
 
+		if(root->children[1]->type != AST_OP_LES &&
+			root->children[1]->type != AST_OP_GRE &&
+			root->children[1]->type != AST_OP_LE &&
+			root->children[1]->type != AST_OP_GE &&
+			root->children[1]->type != AST_OP_EQ &&
+			root->children[1]->type != AST_OP_NE &&
+			root->children[1]->type != AST_OP_AND &&
+			root->children[1]->type != AST_OP_OR) {
+			if(root->children[1]->type == AST_SYMBOL ||
+				root->children[1]->type == AST_SYMBOL_VEC ||
+				root->children[1]->type == AST_SYMBOL_LIT) {
+				if(root->children[1]->symbol->dataType != DATATYPE_BOOLEAN) {
+					printf("Line %d: Operator %s is of an invalid type for logical expression.\n", root->lineNumber, root->children[1]->symbol->text);
+				}
+			}
+			else printf("Line %d: Logical expression contains an invalid operator type.\n", root->lineNumber);
+		}
+	}
+
+
+	// Make sure the vector index is of the correct type
+	else if(root->type == AST_SYMBOL_VEC ||
+		root->type == AST_ATR_VEC) {
+		if(root->children[0]->type != AST_OP_SUM &&
+			root->children[0]->type != AST_OP_SUB &&
+			root->children[0]->type != AST_OP_MUL &&
+			root->children[0]->type != AST_OP_DIV) {
+			if(root->children[0]->type == AST_SYMBOL ||
+				root->children[0]->type == AST_SYMBOL_VEC ||
+				root->children[0]->type == AST_SYMBOL_LIT) {
+				if(root->children[0]->symbol->dataType != DATATYPE_INTEGER &&
+					root->children[0]->symbol->dataType != DATATYPE_CHARACTER) {
+					printf("Line %d: Vector index %s is of an invalid type.\n", root->lineNumber, root->children[0]->symbol->text);
+				}
+			}
+			else printf("Line %d: Vector index is of an invalid type.\n", root->lineNumber);
+		}
+	}
 
 	for (i = 0; i < MAX_CHILDREN; ++i) {
 		checkDataTypes(root->children[i]);
 	}
-}
-
-int arithmeticExpressionError(ASTREE *root) {
-	if(root->type == AST_OP_SUM || root->type == AST_OP_SUB || root->type == AST_OP_MUL || root->type == AST_OP_DIV) {
-		return(arithmeticExpressionError(root->children[0]) || arithmeticExpressionError(root->children[1]));
-	}
-
-	if(root->type == AST_SYMBOL || root->type == AST_SYMBOL_VEC || root->type == AST_SYMBOL_LIT) {
-		if(root->symbol->dataType == DATATYPE_INTEGER || root->symbol->dataType == DATATYPE_FLOATING || root->symbol->dataType == DATATYPE_CHARACTER)
-			return 0;
-		return 1;
-	}
-
-	return 1;
 }

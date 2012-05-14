@@ -62,7 +62,7 @@ FILE *yyin;
 
 %%
 
-p : programa													{ $$ = $1; hash_print(); astPrintTree($$); astPrintTreeSrc($$); checkDeclarations($$); checkUtilization($$); checkDataTypes($$); }
+p : programa													{ $$ = $1; astPrintTree($$); astPrintTreeSrc($$); checkDeclarations($$); checkUtilization($$); checkDataTypes($$); hash_print(); }
 
 programa : decl_global programa									{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
 	| def_funcao programa										{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
