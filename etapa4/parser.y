@@ -62,7 +62,7 @@ FILE *yyin;
 
 %%
 
-p : programa													{ $$ = $1; astPrintTree($$); astPrintTreeSrc($$); checkDeclarations($$); checkUtilization($$); checkDataTypes($$); hash_print(); }
+p : programa													{ $$ = $1; astPrintTree($$); astPrintTreeSrc($$); checkDeclarations($$); checkUtilization($$); checkDataTypes($$); checkFunctionCallParameters($$); hash_print(); }
 
 programa : decl_global programa									{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
 	| def_funcao programa										{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
@@ -88,7 +88,8 @@ tipo_var : KW_INTEGER											{ $$ = astCreate(AST_T_INT, 0, 0, 0, 0, 0); }
 	;
 
 def_funcao : TK_IDENTIFIER ':' tipo_var '(' lista_parametros ')' comando ';'
-							{ $$ = astCreate(AST_DEF_F, $1, $3, $5, $7, 0); $1->dataType = dataTypeMap($3->type); }
+							{ $$ = astCreate(AST_DEF_F, $1, $3, $5, $7, 0); $1->dataType = dataTypeMap($3->type); 
+							$1->ast = $5; }
 	;
 
 lista_parametros : lista_param_nao_vazia						{ $$ = $1; }

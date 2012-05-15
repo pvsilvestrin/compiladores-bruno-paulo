@@ -22,6 +22,7 @@ void checkDeclarations(ASTREE *root){
 			if (root->type == AST_DECL_VAR) root->symbol->type = SYMBOL_VARIABLE;
 			if (root->type == AST_DECL_VEC) root->symbol->type = SYMBOL_VECTOR;
 			if (root->type == AST_DEF_F) root->symbol->type = SYMBOL_FUNCTION;
+			if (root->type == AST_PARAM) root->symbol->type = SYMBOL_PARAM;
 		}
 	}
 
@@ -216,3 +217,70 @@ void checkDataTypes(ASTREE *root) {
 		checkDataTypes(root->children[i]);
 	}
 }
+
+void checkFunctionCallParameters(ASTREE *root) {
+	if(root == 0) return;
+
+	int i;
+
+	if(root->type == AST_CHAM_F){
+		ASTREE *params = root->symbol->ast;
+
+		if(params->type == AST_EMPTY && root->children[0]->type != AST_EMPTY)
+			printf("Line %d: Function call %s invalid number of parameters.\n", root->lineNumber, root->symbol->text);
+		else checkListParams(params, root->children[0], root);
+
+	}
+
+	for (i = 0; i < MAX_CHILDREN; ++i) {
+		checkFunctionCallParameters(root->children[i]);
+	}
+
+}
+
+void checkListParams(ASTREE *declParams, ASTREE *callParams, ASTREE *root){
+	if(declParams == 0 && callParams == 0) return;
+	if(declParams == 0 && callParams != 0 || declParams != 0 && callParams == 0){ 
+		printf("Line %d: Function call %s invalid number of parameters.\n", root->lineNumber, root->symbol->text);
+		return;
+	}
+	int parameterType = checkExpressionType(callParams->children[0]);
+
+	if(declParams->children[0]->symbol->dataType == DATATYPE_BOOLEAN && parameterType != DATATYPE_BOOLEAN){
+		printf("Line %d: Function call %s invalid parameter type.\n", root->lineNumber, root->symbol->text);
+		return;
+	}else if (declParams->children[0]->symbol->dataType == DATATYPE_CHARACTER 
+		&& parameterType != DATATYPE_CHARACTER
+		&& parameterType != DATATYPE_BOOLEAN){
+		printf("Line %d: Function call %s invalid parameter type.\n", root->lineNumber, root->symbol->text);
+		return;
+	} else if(declParams->children[0]->symbol->dataType == DATATYPE_INTEGER && parameterType == DATATYPE_FLOATING){
+		printf("Line %d: Function call %s invalid parameter type.\n", root->lineNumber, root->symbol->text);
+		return;
+	}
+	
+	checkListParams(declParams->children[1], callParams->children[1], root);
+}
+
+int checkExpressionType(ASTREE *expression){
+	int dataType1, dataType2;
+	if(expression == 0) return -1;
+	else {
+		if(expression->symbol != 0) return expression->symbol->dataType;
+		else {
+			if(expression->type == AST_OP_LES || expression->type == AST_OP_GRE || expression->type == AST_OP_LE ||
+				expression->type == AST_OP_GE || expression->type == AST_OP_EQ || expression->type == AST_OP_NE ||
+				expression->type == AST_OP_AND || expression->type == AST_OP_OR) 
+				return DATATYPE_BOOLEAN;
+
+			dataType1 = checkExpressionType(expression->children[0]);
+			dataType2 = checkExpressionType(expression->children[1]);
+			if(dataType1 == DATATYPE_FLOATING || dataType2 == DATATYPE_FLOATING) return DATATYPE_FLOATING;
+			if(dataType1 == DATATYPE_INTEGER || dataType2 == DATATYPE_INTEGER) return DATATYPE_INTEGER;
+			if(dataType1 == DATATYPE_CHARACTER || dataType2 == DATATYPE_CHARACTER) return DATATYPE_CHARACTER;
+			else return DATATYPE_BOOLEAN;
+		} 
+
+	}
+
+} 
