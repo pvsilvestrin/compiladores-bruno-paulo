@@ -21,8 +21,9 @@ void checkDeclarations(ASTREE *root){
 				printf("Line %d: Symbol %s already defined.\n", root->lineNumber, root->symbol->text);
 			if (root->type == AST_DECL_VAR) root->symbol->type = SYMBOL_VARIABLE;
 			if (root->type == AST_DECL_VEC) root->symbol->type = SYMBOL_VECTOR;
-			if (root->type == AST_DEF_F) root->symbol->type = SYMBOL_FUNCTION;
-			if (root->type == AST_PARAM) root->symbol->type = SYMBOL_PARAM;
+			if (root->type == AST_DEF_F) {
+				root->symbol->type = SYMBOL_FUNCTION;
+			}
 		}
 	}
 
@@ -118,8 +119,7 @@ void checkDataTypes(ASTREE *root) {
 
 
 	// Make sure the relational expressions have the correct operators types
-	else if(root->type == AST_OP_LES || root->type == AST_OP_GRE || root->type == AST_OP_LE || root->type == AST_OP_GE
-		 || root->type == AST_OP_EQ || root->type == AST_OP_NE) {
+	else if(root->type == AST_OP_LES || root->type == AST_OP_GRE || root->type == AST_OP_LE || root->type == AST_OP_GE) {
 		if(root->children[0]->type != AST_OP_SUM &&
 			root->children[0]->type != AST_OP_SUB &&
 			root->children[0]->type != AST_OP_MUL &&
@@ -192,6 +192,7 @@ void checkDataTypes(ASTREE *root) {
 			else printf("Line %d: Logical expression contains an invalid operator type.\n", root->lineNumber);
 		}
 	}
+
 
 
 	// Make sure the vector index is of the correct type
