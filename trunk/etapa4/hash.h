@@ -3,9 +3,6 @@
 #define HASH_H
 
 #include <stdio.h>
-//#include "astree.h"
-
-//typedef ASTREE; 
 
 #define MAX_CHILDREN	4
 
@@ -22,6 +19,7 @@
 #define SYMBOL_VARIABLE 8
 #define SYMBOL_VECTOR 9
 #define SYMBOL_FUNCTION 10
+#define SYMBOL_PARAM 11
 
 #define DATATYPE_INTEGER		1
 #define DATATYPE_FLOATING		2
