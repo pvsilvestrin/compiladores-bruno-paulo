@@ -39,15 +39,17 @@ maisuma:integer ()
   if (x < (52 + 5))
   then output "x < 52"
   else return x;
-
+  incn(a);
   
 
 	do {a = a + 1; x = 0} while ((x > x) && (1 + 1) > 3 || false);
-	while(a < 8)
+	while((a < 8) == true)
 	{/*declare a: floating;*/}
   };
 
 declare x: integer;
-declare i: boolean;
+declare i: integer;
 declare g: integer;
 declare n: integer;
+declare c: boolean;
+declare b: integer;

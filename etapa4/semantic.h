@@ -6,3 +6,4 @@ void checkDeclarations(ASTREE *root);
 void checkUtilization(ASTREE *root);
 void checkDataTypes(ASTREE *root);
 void checkArithmeticExpression(ASTREE *root);
+void checkListParams(ASTREE *declParams, ASTREE *callParams, ASTREE *root);
