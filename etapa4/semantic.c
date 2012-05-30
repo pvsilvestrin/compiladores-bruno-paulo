@@ -1,7 +1,7 @@
 //SEMANTIC ANALISYS 2012
 
 #include <stdlib.h>
-#include "astree.h"
+#include "semantic.h"
 
 void checkDeclarations(ASTREE *root){
 	if(root == 0) return;
@@ -12,7 +12,8 @@ void checkDeclarations(ASTREE *root){
 
 	if(root->type == AST_DECL_VAR ||
 		root->type == AST_DECL_VEC ||
-		root->type == AST_DEF_F){
+		root->type == AST_DEF_F ||
+		root->type == AST_PARAM){
 
 		if(root->symbol == 0) {
 			printf("Line %d: Declaration is missing the identifier name.\n", root->lineNumber);
@@ -21,9 +22,8 @@ void checkDeclarations(ASTREE *root){
 				printf("Line %d: Symbol %s already defined.\n", root->lineNumber, root->symbol->text);
 			if (root->type == AST_DECL_VAR) root->symbol->type = SYMBOL_VARIABLE;
 			if (root->type == AST_DECL_VEC) root->symbol->type = SYMBOL_VECTOR;
-			if (root->type == AST_DEF_F) {
-				root->symbol->type = SYMBOL_FUNCTION;
-			}
+			if (root->type == AST_DEF_F) root->symbol->type = SYMBOL_FUNCTION;
+			if (root->type == AST_PARAM) root->symbol->type = SYMBOL_PARAM;
 		}
 	}
 
@@ -38,19 +38,19 @@ void checkUtilization(ASTREE *root){
 	int i;
 
 	// Make sure only declared scalars are being used as scalars
-	if(root->type == AST_SYMBOL || root->type == AST_ATR){
+	if(root->type == AST_SYMBOL || root->type == AST_ATR_VAR){
 		if (root->symbol->type == SYMBOL_VECTOR) {
 			printf("Line %d: Declared vector %s being used as scalar type.\n", root->lineNumber, root->symbol->text);
 		} else if(root->symbol->type == SYMBOL_FUNCTION) {
 			printf("Line %d: Declared function %s being used as scalar type.\n", root->lineNumber, root->symbol->text);
-		} else if (root->symbol->type != SYMBOL_VARIABLE){
+		} else if (root->symbol->type != SYMBOL_VARIABLE && root->symbol->type != SYMBOL_PARAM){
 			printf("Line %d: Variable %s not declared.\n", root->lineNumber, root->symbol->text);
 		}
 	}
 
 	// Make sure only declared vectors are being used as vectors
 	else if(root->type == AST_SYMBOL_VEC || root->type == AST_ATR_VEC){
-		if (root->symbol->type == SYMBOL_VARIABLE) {
+		if (root->symbol->type == SYMBOL_VARIABLE || root->symbol->type == SYMBOL_PARAM) {
 			printf("Line %d: Declared variable %s being used as vector type.\n", root->lineNumber, root->symbol->text);
 		} else if (root->symbol->type == SYMBOL_FUNCTION) {
 			printf("Line %d: Declared function %s being used as vector type.\n", root->lineNumber, root->symbol->text);
@@ -61,12 +61,14 @@ void checkUtilization(ASTREE *root){
 
 	// Make sure only declared functions are being used as functions
 	else if(root->type == AST_CHAM_F){
-		if (root->symbol->type == SYMBOL_VARIABLE) {
+		if (root->symbol->type == SYMBOL_VARIABLE || root->symbol->type == SYMBOL_PARAM) {
 			printf("Line %d: Declared variable %s being used as function type.\n", root->lineNumber, root->symbol->text);
 		} else if (root->symbol->type == SYMBOL_VECTOR) {
 			printf("Line %d: Declared variable %s being used as function type.\n", root->lineNumber, root->symbol->text);
 		} else if (root->symbol->type != SYMBOL_FUNCTION){
 			printf("Line %d: Function %s not declared.\n", root->lineNumber, root->symbol->text);
+		} else if (root->symbol->type == SYMBOL_FUNCTION) {
+			checkFunctionCallParameters(root);
 		}
 	}
 
@@ -231,10 +233,6 @@ void checkFunctionCallParameters(ASTREE *root) {
 			printf("Line %d: Function call %s invalid number of parameters.\n", root->lineNumber, root->symbol->text);
 		else checkListParams(params, root->children[0], root);
 
-	}
-
-	for (i = 0; i < MAX_CHILDREN; ++i) {
-		checkFunctionCallParameters(root->children[i]);
 	}
 
 }
