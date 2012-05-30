@@ -62,7 +62,7 @@ FILE *yyin;
 
 %%
 
-p : programa													{ $$ = $1; astPrintTree($$); astPrintTreeSrc($$); checkDeclarations($$); checkUtilization($$); checkDataTypes($$); checkFunctionCallParameters($$); /*hash_print();*/ }
+p : programa													{ $$ = $1; astPrintTree($$); astPrintTreeSrc($$); checkDeclarations($$); checkUtilization($$); checkDataTypes($$); /*hash_print();*/ }
 
 programa : decl_global programa									{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
 	| def_funcao programa										{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
@@ -120,7 +120,7 @@ seq_comando : comando											{ $$ = astCreate(AST_SEQ, 0, $1, 0, 0, 0); }
 	| comando ';' seq_comando									{ $$ = astCreate(AST_SEQ, 0, $1, $3, 0, 0); }
 	;
 
-atribuicao : TK_IDENTIFIER '=' expressao						{ $$ = astCreate(AST_ATR, $1, $3, 0, 0, 0); }
+atribuicao : TK_IDENTIFIER '=' expressao						{ $$ = astCreate(AST_ATR_VAR, $1, $3, 0, 0, 0); }
 	| TK_IDENTIFIER '[' expressao ']' '=' expressao				{ $$ = astCreate(AST_ATR_VEC, $1, $3, $6, 0, 0); }
 	;
 

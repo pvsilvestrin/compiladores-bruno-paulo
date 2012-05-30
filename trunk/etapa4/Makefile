@@ -38,5 +38,5 @@ lex.yy.c: scanner.l
 
 
 clean:
-	rm *.o lex.yy.c y.tab.c y.tab.h etapa4
+	rm *.o lex.yy.c y.tab.c y.tab.h y.output etapa4
 
