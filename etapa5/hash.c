@@ -86,3 +86,15 @@ HASH_ELEMENT *makeTemp() {
 
 	return temp;
 }
+
+HASH_ELEMENT *makeLabel() {
+	HASH_ELEMENT *temp = 0;
+	static int labelSerialNumber = 1;
+	static char buffer[32];
+
+	sprintf(buffer, "__L_aBeL%d\0", labelSerialNumber++);
+
+	temp = hash_insert(SYMBOL_LABEL, buffer);
+
+	return temp;
+}

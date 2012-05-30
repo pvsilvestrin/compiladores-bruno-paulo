@@ -19,6 +19,8 @@
 #define SYMBOL_FUNCTION			10
 #define SYMBOL_PARAM			11
 
+#define SYMBOL_LABEL			12
+
 #define DATATYPE_INTEGER		1
 #define DATATYPE_FLOATING		2
 #define DATATYPE_CHARACTER		3
@@ -39,5 +41,6 @@ int hash_address(char *text);
 HASH_ELEMENT* hash_find(char *text);
 void hash_print();
 HASH_ELEMENT *makeTemp();
+HASH_ELEMENT *makeLabel();
 
 #endif
