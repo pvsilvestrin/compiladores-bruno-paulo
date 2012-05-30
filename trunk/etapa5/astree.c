@@ -159,7 +159,7 @@ void astPrintTreeSrc (ASTREE *node) {
 		case AST_OUT: fprintf(yyout, "output");
 			astPrintTreeSrc(node->children[0]);
 			break;
-		case AST_ATR: fprintf(yyout, "%s = ", node->symbol->text);
+		case AST_ATR_VAR: fprintf(yyout, "%s = ", node->symbol->text);
 			astPrintTreeSrc(node->children[0]);
 			break;
 		case AST_ATR_VEC: fprintf(yyout, "%s[", node->symbol->text);
@@ -283,7 +283,7 @@ void astPrintNode(ASTREE *node) {
 			break;
 		case AST_OUT: printf("Output");
 			break;
-		case AST_ATR: printf("Atribuicao");
+		case AST_ATR_VAR: printf("Atribuicao variavel");
 			break;
 		case AST_ATR_VEC: printf("Atribuicao vetor");
 			break;
