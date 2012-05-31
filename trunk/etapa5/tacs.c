@@ -28,6 +28,7 @@ TAC * tacJoin(TAC *l1, TAC *l2) {
 	}
 
 	t->prev = l1;
+	l1->next = l2;
 	return l2;
 }
 
@@ -67,12 +68,31 @@ void tacPrintOne(TAC *tac) {
 		case TAC_OP_OR: printf("TAC_OP_OR");
 			break;
 
+		case TAC_CALL: printf("TAC_CALL");
+			break;
+
+		case TAC_RET: printf("TAC_RET");
+			break;
 		case TAC_INP: printf("TAC_INP");
 			break;
 		case TAC_OUT: printf("TAC_OUT");
 			break;
 
 		case TAC_MOVE: printf("TAC_MOVE");
+			break;
+		case TAC_MOVE_IND: printf("TAC_MOVE_IND");
+			break;
+
+		case TAC_PARAM: printf("TAC_PARAM");
+			break;
+
+		case TAC_T_INT: printf("TAC_T_INT");
+			break;
+		case TAC_T_FLO: printf("TAC_T_FLO");
+			break;
+		case TAC_T_BOO: printf("TAC_T_BOO");
+			break;
+		case TAC_T_CHA: printf("TAC_T_CHA");
 			break;
 
 		case TAC_DECL_VEC: printf("TAC_DECL_VEC");
@@ -90,6 +110,11 @@ void tacPrintOne(TAC *tac) {
 			break;
 		case TAC_LABEL: printf("TAC_LABEL");
 			break;
+
+		case TAC_BEGINF: printf("TAC_BEGINF");
+			break;
+		case TAC_ENDF: printf("TAC_ENDF");
+			break;
 		default : printf("UNKNOWN");
 	}
 
@@ -100,9 +125,15 @@ void tacPrintOne(TAC *tac) {
 	printf(")\n");
 }
 
-void tacPrintList(TAC *tac) {	//backwards
+/*void tacPrintList(TAC *tac) {	//backwards
 	while(tac) {
 		tacPrintOne(tac);
 		tac = tac->prev;
+	}
+}*/
+void tacPrintList(TAC *tac) {	//backwards
+	if(tac){
+		tacPrintList(tac->prev);
+		tacPrintOne(tac);
 	}
 }
