@@ -22,7 +22,7 @@ TAC *codeGenerate(ASTREE *root) {
 	switch(root->type) {
 		case AST_SYMBOL: codeList = tacCreate(TAC_SYMBOL, root->symbol, 0, 0);
 			break;
-		case AST_SYMBOL_VEC: codeList = tacCreate(TAC_SYMBOL_VEC, root->symbol, result[0]? result[0]->res : 0, 0);
+		case AST_SYMBOL_VEC: codeList = tacCreate(TAC_SYMBOL_VEC, makeTemp(), root->symbol, result[0]? result[0]->res : 0);
 			codeList = tacJoin(result[0], codeList);
 			break;
 		case AST_SYMBOL_LIT: codeList = tacCreate(TAC_SYMBOL_LIT, root->symbol, 0, 0);
@@ -51,9 +51,9 @@ TAC *codeGenerate(ASTREE *root) {
 			break;
 		case AST_OP_OR: codeList = makeOps(TAC_OP_OR, result[0], result[1]);
 			break;
-		case AST_LIST_E: codeList = tacJoin(result[0], result[1]);
+		case AST_LIST_E: codeList = tacJoin(tacJoin(result[0], tacCreate(TAC_ARG, result[0]? result[0]->res : 0, 0, 0)), result[1]);
 			break;
-		case AST_CHAM_F: codeList = tacJoin(result[0], tacCreate(TAC_CALL, root->symbol, 0, 0));
+		case AST_CHAM_F: codeList = tacJoin(result[0], tacCreate(TAC_CALL, makeTemp(), root->symbol, 0));
 			break;
 		case AST_IF: codeList = makeIf(result[0], result[1], result[2]);
 			break;

@@ -56,6 +56,8 @@
 #define TAC_BEGINF		47
 #define TAC_ENDF		48
 
+#define TAC_ARG			49
+
 typedef struct tac_structure {
 	int type;
 	HASH_ELEMENT *res;
