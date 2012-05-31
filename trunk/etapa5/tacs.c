@@ -115,6 +115,9 @@ void tacPrintOne(TAC *tac) {
 			break;
 		case TAC_ENDF: printf("TAC_ENDF");
 			break;
+
+		case TAC_ARG: printf("TAC_ARG");
+			break;
 		default : printf("UNKNOWN");
 	}
 
@@ -124,8 +127,8 @@ void tacPrintOne(TAC *tac) {
 	
 	printf(")\n");
 }
-
-/*void tacPrintList(TAC *tac) {	//backwards
+/*
+void tacPrintList(TAC *tac) {	//backwards
 	while(tac) {
 		tacPrintOne(tac);
 		tac = tac->prev;

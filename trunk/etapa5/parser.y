@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include "hash.h"
 #include "semantic.h"
+#include "tacs.h"
+#include "code.h"
 
 FILE *yyin;
 
@@ -62,7 +64,7 @@ FILE *yyin;
 
 %%
 
-p : programa													{ $$ = $1; astPrintTreeSrc($$); astPrintTree($$); checkDeclarations($$); checkUtilization($$); checkDataTypes($$); /*hash_print();*/ tacPrintList(codeGenerate($$)); }
+p : programa													{ $$ = $1; astPrintTreeSrc($$); astPrintTree($$); checkDeclarations($$); checkUtilization($$); checkDataTypes($$); hash_print(); TAC* root = codeGenerate($$); tacPrintList(root); }
 
 programa : decl_global programa									{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
 	| def_funcao programa										{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
