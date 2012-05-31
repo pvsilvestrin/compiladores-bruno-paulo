@@ -18,6 +18,16 @@ maisuma:integer ()
     y = x + 8;
   } while(y < v[5]);
 
+  v[10+1] = x+x;
+
+  return 3.0;
+
   };
+
+fatorial: integer(a: integer, b: boolean) {
+  if(a <= 1) then return 1;
+
+  return a * fatorial(a - 1, b);
+};
 
 declare x: integer;

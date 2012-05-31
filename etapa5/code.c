@@ -53,7 +53,7 @@ TAC *codeGenerate(ASTREE *root) {
 			break;
 		case AST_LIST_E: codeList = tacJoin(result[0], result[1]);
 			break;
-		case AST_CHAM_F: 
+		case AST_CHAM_F: codeList = tacJoin(result[0], tacCreate(TAC_CALL, root->symbol, 0, 0));
 			break;
 		case AST_IF: codeList = makeIf(result[0], result[1], result[2]);
 			break;
@@ -61,29 +61,29 @@ TAC *codeGenerate(ASTREE *root) {
 			break;
 		case AST_DO_WHILE: codeList = makeDoWhile(result[0], result[1]);
 			break;
-		case AST_RET: 
+		case AST_RET: codeList = tacJoin(result[0], tacCreate(TAC_RET, result[0]? result[0]->res : 0, 0, 0));
 			break;
 		case AST_INP: codeList = tacCreate(TAC_INP, root->symbol, 0, 0);
 			break;
-		case AST_OUT: codeList = tacCreate(TAC_OUT, result[0]? result[0]->res : 0, 0, 0);
+		case AST_OUT: codeList = tacJoin(result[0], tacCreate(TAC_OUT, result[0]? result[0]->res : 0, 0, 0));
 			break;
 		case AST_ATR_VAR: codeList = tacJoin(result[0], tacCreate(TAC_MOVE, root->symbol, result[0]? result[0]->res : 0, 0));
 			break;
-		case AST_ATR_VEC: 
+		case AST_ATR_VEC: codeList = makeAtrVec(root->symbol, result[0], result[1]);
 			break;
 		case AST_SEQ: codeList = tacJoin(result[0], result[1]);
 			break;
-		case AST_PARAM: 
+		case AST_PARAM: codeList = tacJoin(result[0], tacCreate(TAC_PARAM, root->symbol, result[0]? result[0]->res : 0, 0)); 
 			break;
-		case AST_T_INT: 
+		case AST_T_INT: codeList = tacCreate(TAC_T_INT, 0, 0, 0);
 			break;
-		case AST_T_FLO: 
+		case AST_T_FLO: codeList = tacCreate(TAC_T_FLO, 0, 0, 0);
 			break;
-		case AST_T_BOO: 
+		case AST_T_BOO: codeList = tacCreate(TAC_T_BOO, 0, 0, 0);
 			break;
-		case AST_T_CHA: 
+		case AST_T_CHA: codeList = tacCreate(TAC_T_CHA, 0, 0, 0);
 			break;
-		case AST_LIST_P: 
+		case AST_LIST_P: codeList = tacJoin(result[0], result[1]);
 			break;
 		case AST_DEF_F: codeList = funcDecl(root->symbol, result[0], result[1], result[2]);
 			break;
@@ -105,6 +105,15 @@ TAC *codeGenerate(ASTREE *root) {
 			break;
 		default: break;
 	}
+
+	return codeList;
+}
+
+TAC* makeAtrVec(HASH_ELEMENT* symbol, TAC* exprIndex, TAC* cmd){
+	TAC *codeList = 0;
+
+	TAC *moveInd = tacCreate(TAC_MOVE_IND, symbol, exprIndex ? exprIndex->res : 0, cmd ? cmd->res : 0);
+	codeList = tacJoin(tacJoin(exprIndex, cmd), moveInd);
 
 	return codeList;
 }
@@ -172,12 +181,17 @@ TAC* makeDoWhile(TAC* cmd, TAC* expr) {
 }
 
 TAC* funcDecl(HASH_ELEMENT* symbol, TAC* type, TAC* params, TAC* cmds) {
-	HASH_ELEMENT* targetReturn = makeLabel();
+	TAC* beginf = tacCreate(TAC_BEGINF, symbol, 0, 0);
+	TAC* endf = tacCreate(TAC_ENDF, symbol, 0, 0);
+
+	return tacJoin(tacJoin(tacJoin(params, beginf), cmds), endf);
+
+	/*HASH_ELEMENT* targetReturn = makeLabel();
 
 	TAC* jumpIndReturn = tacCreate(TAC_JUMPIND, targetReturn, 0, 0);
 
 	TAC* labelReturn = tacCreate(TAC_LABEL, targetReturn, 0, 0);
 	TAC* labelBegin = tacCreate(TAC_LABEL, symbol, 0, 0);
 
-	return tacJoin(tacJoin(tacJoin(labelReturn, labelBegin), cmds), jumpIndReturn);
+	return tacJoin(tacJoin(tacJoin(labelReturn, labelBegin), cmds), jumpIndReturn);*/
 }
