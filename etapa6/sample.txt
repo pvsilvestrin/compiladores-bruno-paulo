@@ -1,0 +1,23 @@
+// UFRGS - Compiladores - Marcelo Johann - 2012/1
+
+declare y: integer;
+declare v: integer [10];
+
+maisuma:integer ()
+  {
+  if (2 < (52 + 5))
+  then output "x < 52"
+  else input x;
+  
+  while(x < 20) {
+  x = x + 1;
+  };
+
+  do {
+    y = x + 8;
+    y = x + 8;
+  } while(y < v[5]);
+
+  };
+
+declare x: integer;
