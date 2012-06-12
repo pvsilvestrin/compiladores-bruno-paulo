@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "hash.h"
-#include "astree.h"
+#include "semantic.h"
 
 FILE *yyin;
 
@@ -62,7 +62,7 @@ FILE *yyin;
 
 %%
 
-p : programa													{ $$ = $1; astPrintTree($$); astPrintTreeSrc($$); }
+p : programa													{ $$ = $1; astPrintTreeSrc($$); astPrintTree($$); checkDeclarations($$); checkUtilization($$); checkDataTypes($$); /*hash_print();*/ tacPrintList(codeGenerate($$)); }
 
 programa : decl_global programa									{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
 	| def_funcao programa										{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
@@ -73,10 +73,12 @@ decl_global : decl_var ';'										{ $$ = astCreate(AST_DECL_GL, 0, $1, 0, 0, 0
 	| decl_vetor ';'											{ $$ = astCreate(AST_DECL_GL, 0, $1, 0, 0, 0); }
 	;
 
-decl_var : KW_DECLARE TK_IDENTIFIER ':' tipo_var				{ $$ = astCreate(AST_DECL_VAR, $2, $4, 0, 0, 0); }
+decl_var : KW_DECLARE TK_IDENTIFIER ':' tipo_var
+							{ $$ = astCreate(AST_DECL_VAR, $2, $4, 0, 0, 0); $2->dataType = dataTypeMap($4->type); }
 	;
 
-decl_vetor : KW_DECLARE TK_IDENTIFIER ':' tipo_var '[' LIT_INTEGER ']' { $$ = astCreate(AST_DECL_VEC, $2, $4, astCreate(AST_VEC_SIZE, $6, 0, 0, 0, 0), 0, 0); }
+decl_vetor : KW_DECLARE TK_IDENTIFIER ':' tipo_var '[' LIT_INTEGER ']'
+	{ $$ = astCreate(AST_DECL_VEC, $2, $4, astCreate(AST_VEC_SIZE, $6, 0, 0, 0, 0), 0, 0); $2->dataType = dataTypeMap($4->type); }
 	;
 
 tipo_var : KW_INTEGER											{ $$ = astCreate(AST_T_INT, 0, 0, 0, 0, 0); }
@@ -86,7 +88,8 @@ tipo_var : KW_INTEGER											{ $$ = astCreate(AST_T_INT, 0, 0, 0, 0, 0); }
 	;
 
 def_funcao : TK_IDENTIFIER ':' tipo_var '(' lista_parametros ')' comando ';'
-																{ $$ = astCreate(AST_DEF_F, $1, $3, $5, $7, 0); }
+							{ $$ = astCreate(AST_DEF_F, $1, $3, $5, $7, 0); $1->dataType = dataTypeMap($3->type); 
+							$1->ast = $5; }
 	;
 
 lista_parametros : lista_param_nao_vazia						{ $$ = $1; }
@@ -97,7 +100,8 @@ lista_param_nao_vazia : parametro ',' lista_param_nao_vazia		{ $$ = astCreate(AS
 	| parametro 												{ $$ = astCreate(AST_LIST_P, 0, $1, 0, 0, 0); }
 	;
 
-parametro : TK_IDENTIFIER ':' tipo_var							{ $$ = astCreate(AST_PARAM, $1, $3, 0, 0, 0); }
+parametro : TK_IDENTIFIER ':' tipo_var
+							{ $$ = astCreate(AST_PARAM, $1, $3, 0, 0, 0); $1->dataType = dataTypeMap($3->type); }
 	;
 
 comando : bloco_comando											{ $$ = astCreate(AST_COM, 0, $1, 0, 0, 0); }
@@ -114,10 +118,6 @@ bloco_comando : '{' seq_comando '}'								{ $$ = astCreate(AST_BLO_COM, 0, $2, 
 
 seq_comando : comando											{ $$ = astCreate(AST_SEQ, 0, $1, 0, 0, 0); }
 	| comando ';' seq_comando									{ $$ = astCreate(AST_SEQ, 0, $1, $3, 0, 0); }
-	| decl_var													{ $$ = astCreate(AST_SEQ, 0, $1, 0, 0, 0); }
-	| decl_var ';' seq_comando									{ $$ = astCreate(AST_SEQ, 0, $1, $3, 0, 0); }
-	| decl_vetor												{ $$ = astCreate(AST_SEQ, 0, $1, 0, 0, 0); }
-	| decl_vetor ';' seq_comando								{ $$ = astCreate(AST_SEQ, 0, $1, $3, 0, 0); }
 	;
 
 atribuicao : TK_IDENTIFIER '=' expressao						{ $$ = astCreate(AST_ATR_VAR, $1, $3, 0, 0, 0); }
@@ -144,13 +144,19 @@ controle_fluxo : KW_IF '(' expressao ')' KW_THEN comando		{ $$ = astCreate(AST_I
 	;
 
 expressao : TK_IDENTIFIER						{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
-	| TK_IDENTIFIER '[' expressao ']'			{ $$ = astCreate(AST_SYMBOL, $1, $3, 0, 0, 0); }
-	| LIT_INTEGER 								{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
-	| LIT_FLOATING								{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
-	| LIT_FALSE									{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
-	| LIT_TRUE									{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
-	| LIT_CHARACTER								{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }	
-	| LIT_STRING								{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
+	| TK_IDENTIFIER '[' expressao ']'			{ $$ = astCreate(AST_SYMBOL_VEC, $1, $3, 0, 0, 0); }
+	| LIT_INTEGER
+			{ $$ = astCreate(AST_SYMBOL_LIT, $1, 0, 0, 0, 0); $1->dataType = DATATYPE_INTEGER; }
+	| LIT_FLOATING
+			{ $$ = astCreate(AST_SYMBOL_LIT, $1, 0, 0, 0, 0); $1->dataType = DATATYPE_FLOATING; }
+	| LIT_FALSE
+			{ $$ = astCreate(AST_SYMBOL_LIT, $1, 0, 0, 0, 0); $1->dataType = DATATYPE_BOOLEAN; }
+	| LIT_TRUE
+			{ $$ = astCreate(AST_SYMBOL_LIT, $1, 0, 0, 0, 0); $1->dataType = DATATYPE_BOOLEAN; }
+	| LIT_CHARACTER
+			{ $$ = astCreate(AST_SYMBOL_LIT, $1, 0, 0, 0, 0); $1->dataType = DATATYPE_CHARACTER; }
+	| LIT_STRING
+			{ $$ = astCreate(AST_SYMBOL_LIT, $1, 0, 0, 0, 0); $1->dataType = DATATYPE_STRING; }
 	| expressao '+' expressao 					{ $$ = astCreate(AST_OP_SUM, 0, $1, $3, 0, 0); }
 	| expressao '-' expressao 					{ $$ = astCreate(AST_OP_SUB, 0, $1, $3, 0, 0); }
 	| expressao '*' expressao 					{ $$ = astCreate(AST_OP_MUL, 0, $1, $3, 0, 0); }

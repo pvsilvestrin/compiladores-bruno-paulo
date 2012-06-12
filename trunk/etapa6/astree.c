@@ -13,6 +13,7 @@ ASTREE *astCreate(int type, HASH_ELEMENT *symbol, ASTREE *s0, ASTREE *s1, ASTREE
 	newNode->children[1] = s1;
 	newNode->children[2] = s2;
 	newNode->children[3] = s3;
+	newNode->lineNumber = getLineNumber();
 	return newNode;
 }
 
@@ -324,8 +325,36 @@ void astPrintNode(ASTREE *node) {
 			break;
 	}
 	
-	if (node->symbol != 0)
-		printf(", %s", node->symbol->text);
+	if (node->symbol != 0) {
+		printf(", %s - ", node->symbol->text);
+		printDataType(node->symbol->dataType);
+	}
 		
 	printf(");\n");
+}
+
+
+int dataTypeMap(int type) {
+	switch(type) {
+		case AST_T_INT: return DATATYPE_INTEGER;
+		case AST_T_FLO: return DATATYPE_FLOATING;
+		case AST_T_CHA: return DATATYPE_CHARACTER;
+		case AST_T_BOO: return DATATYPE_BOOLEAN;
+		default: return 0;
+	}
+}
+
+void printDataType(int dataType) {
+	switch(dataType) {
+		case DATATYPE_INTEGER: printf("integer");
+			break;
+		case DATATYPE_FLOATING: printf("floating");
+			break;
+		case DATATYPE_CHARACTER: printf("character");
+			break;
+		case DATATYPE_BOOLEAN: printf("boolean");
+			break;
+		default: printf("undefined");
+			break;
+	}
 }
