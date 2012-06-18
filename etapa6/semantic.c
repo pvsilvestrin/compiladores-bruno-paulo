@@ -216,6 +216,8 @@ void checkDataTypes(ASTREE *root) {
 		}
 	}
 
+	//TODO check return types
+
 	for (i = 0; i < MAX_CHILDREN; ++i) {
 		checkDataTypes(root->children[i]);
 	}
