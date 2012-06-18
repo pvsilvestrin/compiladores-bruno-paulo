@@ -8,3 +8,4 @@ TAC* makeIf(TAC* cond, TAC* then, TAC* els);
 TAC* makeWhile(TAC* expr, TAC* cmd);
 TAC* makeDoWhile(TAC* expr, TAC* cmd);
 TAC* funcDecl(HASH_ELEMENT* symbol, TAC* type, TAC* params, TAC* cmds);
+TAC* makeAtrVec(HASH_ELEMENT* symbol, TAC* exprIndex, TAC* cmd);
