@@ -46,3 +46,7 @@ lex.yy.c: scanner.l
 clean:
 	rm *.o lex.yy.c y.tab.c y.tab.h y.output etapa6
 
+
+asm:
+	nasm -f elf out.asm
+	gcc -o out out.o

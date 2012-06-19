@@ -1,18 +1,9 @@
 
 declare a: integer;
-declare b: integer;
-declare x: integer;
-declare y: integer;
-declare c: character;
-declare d: character;
-declare v: integer [10];
 
-fun: integer(a: integer, n: integer)
+main: integer()
 {
-a = v[v[4]];
-b = fun ( fun ( (9 * a), b), d);
-if ((a >= b))
-then output 1000
-else output 0, 1, 2;
+a = 5;
+output false, "hello, ", 3.14, "world!", "\n", 4, 44, 666, 'B', 'r', 5, 'u', true, 'E', false, (1 + 2);
 
 };

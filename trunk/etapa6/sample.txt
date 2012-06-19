@@ -9,5 +9,4 @@ main:integer ()
     b = 4;
     c = a + b;
     output a, "blalbla";
-    output "blabla";
   };

@@ -1,0 +1,4 @@
+make
+./etapa6 hw.d out.txt
+make asm
+./out

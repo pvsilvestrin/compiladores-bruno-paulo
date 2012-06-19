@@ -3,6 +3,7 @@
 #include "astree.h"
 
 TAC *codeGenerate(ASTREE *root);
+TAC* outputParams(TAC* params);
 TAC* makeOps(int type, TAC* op1, TAC* op2);
 TAC* makeIf(TAC* cond, TAC* then, TAC* els);
 TAC* makeWhile(TAC* expr, TAC* cmd);

@@ -1,0 +1,88 @@
+A2I v0.4
+by Pascal Lacroix
+
+What is A2Iÿ?
+-------------
+
+	A2I converts assembly files in AT&T's syntax to files in Nasm's
+syntax. This means that you can mix 16 and 32 bits code with GCC and Nasm.
+You can also produce object files in other format than COFF because
+Nasm supports many. A2I should be useful in OS developping.
+
+Here is an example:
+
+; example for a .com file :
+
+[section .text]
+[BITS 16]
+[org 0x100]
+
+startup:
+	mov ax, cs
+	mov ds, ax
+	mov es, ax
+	...
+	mov eax, cr0
+	inc eax
+	mov cr0, eax
+; now in pmode !
+	jmp KERNEL_CS:startup32
+
+[BITS 32]
+startup32:
+	mov ax, KERNEL_DS
+	mov ds, ax
+	mov es, ax
+	...
+	call  _main
+
+	jmp exit_to_dos
+	
+%include "main.asm"
+
+; end of file.
+
+And you must also have a file named "main.c" with a function main, which
+will be converted by A2I into "main.asm".
+
+How to build ?
+--------------
+        Just type `make'. All should work :)
+        (you'll need GNU make, bison and gcc)
+        
+How to use itÿ?
+---------------
+
+        To convert a file, simply type: "a2i filename.s". A2I will convert
+it to "filename.asm".
+
+There are some switches which could be useful:
+
+-o name.asm     will set the output filename to "nasm.asm"
+
+-B baseaddr	will set the base address of your program. This option is
+                experimental. For more information, see in the EXAMPLE
+                directory.
+
+-O1             will align all symbols in .data or .bss section to 4, and
+                all symbols in .text to 2 (with nops)
+
+-O2             will align all symbols to 4 (all sections).
+
+--no-info	will suppress unneeded information (debug info and
+                gcc_compiled labels).
+
+Copyrightÿ:
+-----------
+        For information about copyright read the file LICENSE.
+
+The authorÿ:
+------------
+Lacroix Pascal:
+        WWW: http://www.multimania.com/~placr/
+        Email: placr@hotmail.com
+
+*****
+Please contact me if you have bug reports, suggestions, questions or
+comments. If you make changes, please submit diff files to me (diff -c3 only).
+*****
