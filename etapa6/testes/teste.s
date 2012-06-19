@@ -1,7 +1,7 @@
 	.file	"teste.c"
-	.comm	a,4,4
-	.comm	b,4,4
-	.comm	c,4,4
+	.section	.rodata
+.LC0:
+	.string	"Hello World!"
 	.text
 	.globl	main
 	.type	main, @function

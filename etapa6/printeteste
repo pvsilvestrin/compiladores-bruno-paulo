@@ -1,0 +1,44 @@
+extern printf                   ; the C function to be called
+       SECTION .data           ; Data section, initialized variables
+
+a:         dd      68               ; int a=5;
+b:         dd      68.55               ; int a=5;
+c:			db "jdjdjdj\n"
+fmtStr:    db "%s", 0 ; The printf format, "\n",'0'
+fmtInt:    db "%d", 0 ; The printf format, "\n",'0'
+fmtFlo:    db "%e", 0 ; The printf format, "\n",'0'
+fmtCha:    db "%c", 0 ; The printf format, "\n",'0'
+
+
+       SECTION .text                   ; Code section.
+
+       global main             ; the standard gcc entry point
+main:                           ; the program label for the entry point
+
+
+       push    dword [a]       ; value of variable a
+       push    dword fmtCha       ; address of ctrl string
+       call    printf          ; Call C function
+       add     esp, 8         ; pop stack 3 push times 4 bytes
+
+
+       push    dword [a]       ; value of variable a
+       push    dword fmtInt       ; address of ctrl string
+       call    printf          ; Call C function
+       add     esp, 8         ; pop stack 3 push times 4 bytes
+
+
+       push    dword [b]       ; value of variable a
+       push    dword fmtFlo       ; address of ctrl string
+       call    printf          ; Call C function
+       add     esp, 8         ; pop stack 3 push times 4 bytes
+
+
+       push    dword c       ; value of variable a
+       push    dword fmtStr       ; address of ctrl string
+       call    printf          ; Call C function
+       add     esp, 8         ; pop stack 3 push times 4 bytes
+
+
+       mov     eax,0           ;  normal, no error, return value
+       ret                     ; return

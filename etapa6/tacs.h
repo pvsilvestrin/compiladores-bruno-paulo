@@ -57,6 +57,7 @@
 #define TAC_ENDF		48
 
 #define TAC_ARG			49
+#define TAC_ARG_OUT		50
 
 typedef struct tac_structure {
 	int type;
@@ -74,6 +75,9 @@ void tacPrintOne(TAC *tac);
 void tacPrintList(TAC *tac);
 void tacPrintNasm(TAC *tac);
 void tacPrintOneNasm(TAC *tac);
+void symbolLitNasm(TAC* tac);
+void outputNasm(TAC* tac);
+void printLItNasm(TAC* tac);
 
 
 #endif

@@ -25,7 +25,7 @@ TAC *codeGenerate(ASTREE *root) {
 		case AST_SYMBOL_VEC: codeList = tacCreate(TAC_SYMBOL_VEC, makeTemp(), root->symbol, result[0]? result[0]->res : 0);
 			codeList = tacJoin(result[0], codeList);
 			break;
-		case AST_SYMBOL_LIT: codeList = tacCreate(TAC_SYMBOL_LIT, root->symbol, 0, 0);
+		case AST_SYMBOL_LIT: codeList = tacCreate(TAC_SYMBOL_LIT, makeLabel(), root->symbol, 0);
 			break;
 		case AST_OP_SUM: codeList = makeOps(TAC_OP_SUM, result[0], result[1]);
 			break;
@@ -65,7 +65,7 @@ TAC *codeGenerate(ASTREE *root) {
 			break;
 		case AST_INP: codeList = tacCreate(TAC_INP, root->symbol, 0, 0);
 			break;
-		case AST_OUT: codeList = tacJoin(result[0], tacCreate(TAC_OUT, result[0]? result[0]->res : 0, 0, 0));
+		case AST_OUT: codeList = tacJoin(outputParams(result[0]), tacCreate(TAC_OUT, 0, 0, 0));
 			break;
 		case AST_ATR_VAR: codeList = tacJoin(result[0], tacCreate(TAC_MOVE, root->symbol, result[0]? result[0]->res : 0, 0));
 			break;
@@ -107,6 +107,21 @@ TAC *codeGenerate(ASTREE *root) {
 	}
 
 	return codeList;
+}
+
+TAC* outputParams(TAC* params) {
+	TAC* aux;
+	aux = params;
+
+	while(params != NULL) {
+		if(params->type == TAC_ARG) {
+			params->type = TAC_ARG_OUT;
+		}
+
+		params = params->prev;
+	}
+
+	return aux;
 }
 
 TAC* makeAtrVec(HASH_ELEMENT* symbol, TAC* exprIndex, TAC* cmd){

@@ -1,0 +1,78 @@
+		SECTION .text
+		global main
+		extern printf
+main:
+		push		dword [__L_aBeL2]
+		push		dword fmtInt
+		call		printf
+		add		esp, 8
+
+		push		dword __L_aBeL3
+		push		dword fmtStr
+		call		printf
+		add		esp, 8
+
+		push		dword __L_aBeL5
+		push		dword fmtStr
+		call		printf
+		add		esp, 8
+
+		push		dword __L_aBeL6
+		push		dword fmtStr
+		call		printf
+		add		esp, 8
+
+		push		dword [__L_aBeL7]
+		push		dword fmtInt
+		call		printf
+		add		esp, 8
+
+		push		dword [__L_aBeL8]
+		push		dword fmtInt
+		call		printf
+		add		esp, 8
+
+		push		dword [__L_aBeL9]
+		push		dword fmtInt
+		call		printf
+		add		esp, 8
+
+		push		dword [__L_aBeL10]
+		push		dword fmtCha
+		call		printf
+		add		esp, 8
+
+		push		dword [__L_aBeL11]
+		push		dword fmtCha
+		call		printf
+		add		esp, 8
+
+		push		dword [__L_aBeL12]
+		push		dword fmtInt
+		call		printf
+		add		esp, 8
+
+		push		dword [__L_aBeL13]
+		push		dword fmtCha
+		call		printf
+		add		esp, 8
+
+		push		dword [__L_aBeL14]
+		push		dword fmtInt
+		call		printf
+		add		esp, 8
+
+		push		dword [__L_aBeL15]
+		push		dword fmtCha
+		call		printf
+		add		esp, 8
+
+		push		dword [__L_aBeL16]
+		push		dword fmtInt
+		call		printf
+		add		esp, 8
+
+
+
+		mov		eax, 0
+		ret

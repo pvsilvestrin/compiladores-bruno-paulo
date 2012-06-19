@@ -1,0 +1,4 @@
+List of bugs for A2I:
+---------------------
+ * some math instructions are not supported
+ * some io (outs, ins...) and segment prefixes are not currently supported

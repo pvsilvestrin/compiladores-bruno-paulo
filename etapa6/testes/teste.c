@@ -1,7 +1,5 @@
-#include <stdlib.h>
-int a;
-int b;
-int c;
+#include <stdio.h>
+
 int main(){
 	time(NULL);
 	a = 8;

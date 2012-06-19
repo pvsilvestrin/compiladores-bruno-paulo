@@ -64,7 +64,7 @@ FILE *yyin;
 
 %%
 
-p : programa													{ $$ = $1; astPrintTreeSrc($$); astPrintTree($$); checkDeclarations($$); checkUtilization($$); checkDataTypes($$); hash_print(); TAC* root = codeGenerate($$); tacPrintList(root); }
+p : programa													{ $$ = $1; astPrintTreeSrc($$); astPrintTree($$); checkDeclarations($$); checkUtilization($$); checkDataTypes($$); hash_print(); TAC* root = codeGenerate($$); tacPrintList(root); tacPrintNasm(root); }
 
 programa : decl_global programa									{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }
 	| def_funcao programa										{ $$ = astCreate(AST_PROG, 0, $1, $2, 0, 0); }

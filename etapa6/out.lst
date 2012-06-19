@@ -1,0 +1,15 @@
+     1                                  		extern printf
+     2                                  		SECTION .data
+     3 00000000 48656C6C6F2C0A          __L_aBeL1:	db "Hello,", 10
+     4                                  len__L_aBeL1:	equ $-__L_aBeL1
+     5 00000007 20576F726C64210A        __L_aBeL2:	db " World!", 10
+     6                                  len__L_aBeL2:	equ $-__L_aBeL2
+     7 0000000F 2573                    fmt:	db "%s"
+     8                                  
+     9                                  		SECTION .text
+    10                                  		global main
+    11                                  main:
+    12 00000000 68[07000000]            push	__L_aBeL2
+    13 00000005 68[0F000000]            push dword fmt
+    14 0000000A E8(00000000)            call	printf
+    15 0000000F 83C404                  add		esp, 4

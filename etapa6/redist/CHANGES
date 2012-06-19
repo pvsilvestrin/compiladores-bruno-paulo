@@ -1,0 +1,64 @@
+List of changesÿfor A2I:
+------------------------
+v0.4:
+        I added some math instructions: fadd, fsub, fdiv, fmul, fld...
+        ***
+
+-----------------------------------------------------------------------------
+
+v0.3a:
+        Better string handling, empty "sub-strings" are now written correctly,
+        for example:
+                db "Hello World!", 10, "", 0
+        is now:
+                db "Hello World!", 10, 0
+        Common symbols are put in BSS section and not in the current section.
+        New switches: -O1 and -O2.
+
+-----------------------------------------------------------------------------
+
+v0.3:
+        New switches: -B, -o, --no-info (send me your comments about these
+        switches!).
+	Example file for a very little kernel (just prints a message).
+        A2I is now faster: about 5000 lines/sec (on my PC, send me your
+        statistics!).
+
+-----------------------------------------------------------------------------
+
+v0.2b:
+	More instructions are supported now. Tested under Linux.
+	A2I handles most of the instructions of GAS.
+	Better section handling (thanks to John Fine).
+        Tested with a big file (50000 lines), but to slow (600lines/sec
+        on my PC: Pentium 200).
+
+	Instructions supported:
+        ----------------------
+	.file, .text, .data, .bss, .ascii, .globl, .long, .word, .byte,
+        .p2align, .align, .space, push, pop, mov, xor, call, add,
+        sub, cmp, lea, inc, dec, jmp (ja, jae, jnc, jz...), loop
+        (loopz, loope...), sar, sal, movswl, movslw, movsbl, test, neg,
+        not, and, .comm, .lcomm, shr, shl, imul, idiv, div, or, sbb, cld,
+        cmc, std, stc, ret, nop, rep (repe, repne...), cmpsb, leave,
+        movs (movsw, movsb, movsd), aaa, aad, lods (lodsw, lodsb, lodsd),
+        pushad, popad, out, in, btr, cmps (cmpsb, cmpsw, cmpsd), adc,
+        bt, cli, sti, daa, clc, das, int, lds, les, lfs, lgs, lss, lgdt,
+        sgdt, lidt, sidt, movzwl, movzlw, movzbl, .size, .type, .ident,
+        .set, .section.
+
+-----------------------------------------------------------------------------
+
+v0.2a:
+        Better string handling: strings are now written as strings and
+        not as bytes.
+
+-----------------------------------------------------------------------------
+
+v0.2:
+        Added more instructions, some bugs fixes. 
+
+-----------------------------------------------------------------------------
+
+v0.1:	
+        First release. Has a lot of bugs.

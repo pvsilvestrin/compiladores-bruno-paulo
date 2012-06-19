@@ -1,0 +1,5 @@
+declare a: integer;
+
+main: integer() {
+	
+}
