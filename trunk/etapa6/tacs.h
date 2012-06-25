@@ -27,7 +27,6 @@
 
 #define TAC_RET			21
 #define TAC_INP			22
-#define TAC_OUT			23
 
 #define TAC_MOVE		24
 #define TAC_MOVE_IND	25
@@ -75,7 +74,30 @@ void tacPrintOne(TAC *tac);
 void tacPrintList(TAC *tac);
 void tacPrintNasm(TAC *tac);
 void tacPrintOneNasm(TAC *tac);
+
+void opSumNasm(TAC* tac);
+void opSubNasm(TAC* tac);
+void opMulNasm(TAC* tac);
+void opDivNasm(TAC* tac);
+
+void initCompOpsNasm(TAC *tac);
+void opGENasm(TAC* tac);
+void opGreNasm(TAC* tac);
+void opLENasm(TAC* tac);
+void opLesNasm(TAC* tac);
+void opEqNasm(TAC* tac);
+void opNeNasm(TAC* tac);
+
+void opAndNasm(TAC* tac);
+void opOrNasm(TAC* tac);
+
+void declVarNasm(TAC* tac);
+void declVecNasm(TAC* tac);
+void moveNasm(TAC* tac);
+void moveIndNasm(TAC* tac);
+//TAC* findSymbolLitTAC(char* resText, TAC *current);
 void symbolLitNasm(TAC* tac);
+void symbolVecNasm(TAC* tac);
 void outputNasm(TAC* tac);
 void printLItNasm(TAC* tac);
 

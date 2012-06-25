@@ -22,11 +22,19 @@ TAC *codeGenerate(ASTREE *root) {
 	switch(root->type) {
 		case AST_SYMBOL: codeList = tacCreate(TAC_SYMBOL, root->symbol, 0, 0);
 			break;
-		case AST_SYMBOL_VEC: codeList = tacCreate(TAC_SYMBOL_VEC, makeTemp(), root->symbol, result[0]? result[0]->res : 0);
+		case AST_SYMBOL_VEC: {
+			HASH_ELEMENT *tmp = makeTemp();
+			tmp->dataType = root->symbol->dataType;
+			codeList = tacCreate(TAC_SYMBOL_VEC, tmp, root->symbol, result[0]? result[0]->res : 0);
 			codeList = tacJoin(result[0], codeList);
 			break;
-		case AST_SYMBOL_LIT: codeList = tacCreate(TAC_SYMBOL_LIT, makeLabel(), root->symbol, 0);
+		}
+		case AST_SYMBOL_LIT: {
+			HASH_ELEMENT *lbl = makeLabel();
+			lbl->dataType = root->symbol->dataType;
+			codeList = tacCreate(TAC_SYMBOL_LIT, lbl, root->symbol, 0);
 			break;
+		}
 		case AST_OP_SUM: codeList = makeOps(TAC_OP_SUM, result[0], result[1]);
 			break;
 		case AST_OP_SUB: codeList = makeOps(TAC_OP_SUB, result[0], result[1]);
@@ -53,8 +61,12 @@ TAC *codeGenerate(ASTREE *root) {
 			break;
 		case AST_LIST_E: codeList = tacJoin(tacJoin(result[0], tacCreate(TAC_ARG, result[0]? result[0]->res : 0, 0, 0)), result[1]);
 			break;
-		case AST_CHAM_F: codeList = tacJoin(result[0], tacCreate(TAC_CALL, makeTemp(), root->symbol, 0));
+		case AST_CHAM_F: {
+			funCall(result[0], root);
+			//ASTREE *params = root->symbol->ast;
+			codeList = tacJoin(result[0], tacCreate(TAC_CALL, makeTemp(), root->symbol, 0));
 			break;
+		}
 		case AST_IF: codeList = makeIf(result[0], result[1], result[2]);
 			break;
 		case AST_WHILE: codeList = makeWhile(result[0], result[1]);
@@ -65,7 +77,7 @@ TAC *codeGenerate(ASTREE *root) {
 			break;
 		case AST_INP: codeList = tacCreate(TAC_INP, root->symbol, 0, 0);
 			break;
-		case AST_OUT: codeList = tacJoin(outputParams(result[0]), tacCreate(TAC_OUT, 0, 0, 0));
+		case AST_OUT: codeList = outputParams(result[0]);
 			break;
 		case AST_ATR_VAR: codeList = tacJoin(result[0], tacCreate(TAC_MOVE, root->symbol, result[0]? result[0]->res : 0, 0));
 			break;
@@ -73,7 +85,7 @@ TAC *codeGenerate(ASTREE *root) {
 			break;
 		case AST_SEQ: codeList = tacJoin(result[0], result[1]);
 			break;
-		case AST_PARAM: codeList = tacJoin(result[0], tacCreate(TAC_PARAM, root->symbol, result[0]? result[0]->res : 0, 0)); 
+		case AST_PARAM: codeList = tacCreate(TAC_PARAM, root->symbol, result[0]? result[0]->res : 0, 0); 
 			break;
 		case AST_T_INT: codeList = tacCreate(TAC_T_INT, 0, 0, 0);
 			break;
@@ -122,6 +134,40 @@ TAC* outputParams(TAC* params) {
 	}
 
 	return aux;
+}
+
+void funCall(TAC* params, ASTREE* root) {
+	TAC* aux = params;
+	int argCount = 0;
+
+	while(aux != NULL) {
+		if(aux->type == TAC_ARG) {
+			argCount++;
+			//aux->op1 = findArg(argCount, root->symbol->ast);
+		}
+		aux = aux->prev;
+	}
+
+	aux = params;
+	while(aux != NULL) {
+		if(aux->type == TAC_ARG) {
+			argCount--;
+			aux->op1 = findArg(argCount, root->symbol->ast);
+		}
+		aux = aux->prev;
+	}
+}
+
+HASH_ELEMENT* findArg(int argCount, ASTREE* tree) {
+	ASTREE* aux = tree;
+
+	while(aux != NULL) {
+		if(aux->children[0] != NULL && argCount == 0) {
+			return aux->children[0]->symbol;
+		} else return findArg(--argCount, aux->children[1]);
+	}
+
+	return 0;
 }
 
 TAC* makeAtrVec(HASH_ELEMENT* symbol, TAC* exprIndex, TAC* cmd){
@@ -188,7 +234,7 @@ TAC* makeWhile(TAC* expr, TAC* cmd) {
 TAC* makeDoWhile(TAC* cmd, TAC* expr) {
 	HASH_ELEMENT* targetBegin = makeLabel();
 
-	TAC* jumpBegin = tacCreate(TAC_JTRUE, targetBegin, 0, 0);
+	TAC* jumpBegin = tacCreate(TAC_JTRUE, targetBegin, expr->res, 0);
 
 	TAC* labelBegin = tacCreate(TAC_LABEL, targetBegin, 0, 0);
 

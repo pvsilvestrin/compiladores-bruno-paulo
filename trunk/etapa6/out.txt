@@ -1,9 +1,16 @@
 
-declare a: integer;
+declare a: integer [10];
+declare d: integer;
 
 main: integer()
 {
-a = 5;
-output false, "hello, ", 3.14, "world!", "\n", 4, 44, 666, 'B', 'r', 5, 'u', true, 'E', false, (1 + 2);
+d = fun ( 5, 6);
+output d;
+
+};
+
+fun: integer(numero: integer, numero2: integer)
+{
+return (numero + 1);
 
 };
